@@ -31,16 +31,20 @@ import java.util.Set;
 /**
  * {@link MUnitUserPropertiesManager} allows to set the system properties
  * defined by the user for the execution of the MUnit tests. It also allows
- * save and restore the state of the system properties on call.
- * 
+ * to save and restore the state of the system properties on call.
  * 
  * @author damianpelaez
- *
  */
 public class MUnitUserPropertiesManager
 {
 	private static Set<String> notAllowedPropertyKeys = defineNotAllowedPropertyKeys();
+
 	private Properties initialSystemProperties;
+	
+	public MUnitUserPropertiesManager()
+	{
+		storeInitialSystemProperties();
+	}
 	
 	private static Set<String> defineNotAllowedPropertyKeys()
 	{
@@ -58,10 +62,6 @@ public class MUnitUserPropertiesManager
 		return !notAllowedPropertyKeys.contains(key);
 	}
 
-	public MUnitUserPropertiesManager()
-	{
-		storeInitialSystemProperties();
-	}
 	
 	public void storeInitialSystemProperties()
 	{
@@ -74,7 +74,7 @@ public class MUnitUserPropertiesManager
     	{
 			for(Entry<String, String> entry : userProperties.entrySet())
 			{
-				if(MUnitUserPropertiesManager.isPropertyKeyAllowed(entry.getKey()))
+				if(isPropertyKeyAllowed(entry.getKey()))
 				{
 					System.setProperty(entry.getKey(), entry.getValue());
 				}

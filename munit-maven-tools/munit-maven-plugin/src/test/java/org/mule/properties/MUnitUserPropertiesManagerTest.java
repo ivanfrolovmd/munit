@@ -34,13 +34,18 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class MUnitUserPropertiesManagerTest {
-	private MUnitUserPropertiesManager propertiesManager;
 	private Properties properties;
+	private MUnitUserPropertiesManager propertiesManager;
 	
 	@Before
 	public void setUp(){
 		propertiesManager = new MUnitUserPropertiesManager();
 		properties = (Properties) System.getProperties().clone();
+	}
+
+	@After
+	public void tearDown() {
+		System.setProperties(properties);
 	}
 	
 	@Test
@@ -52,7 +57,7 @@ public class MUnitUserPropertiesManagerTest {
 		
 		propertiesManager.addUserPropertiesToSystem(map);
 		
-		assertEquals("testValue", System.getProperty("test.key"));
+		assertEquals("test.key property should have the value testValue", "testValue", System.getProperty("test.key"));
 	}
 	
 	@Test
@@ -63,7 +68,7 @@ public class MUnitUserPropertiesManagerTest {
 		
 		propertiesManager.addUserPropertiesToSystem(map);
 		
-		assertEquals("testValue2", System.getProperty("test.key.2"));
+		assertEquals("test.key.2 property should have the value testValue2", "testValue2", System.getProperty("test.key.2"));
 		
 		propertiesManager.storeInitialSystemProperties();
 		
@@ -72,16 +77,12 @@ public class MUnitUserPropertiesManagerTest {
 		
 		propertiesManager.addUserPropertiesToSystem(map);
 		
-		assertEquals("testValue2Changed", System.getProperty("test.key.2"));
+		assertEquals("test.key.2 property should now have the value testValue2Changed", "testValue2Changed", System.getProperty("test.key.2"));
 		
 		propertiesManager.restoreInitialSystemProperties();
 		
-		assertEquals("testValue2", System.getProperty("test.key.2"));
+		assertEquals("test.key.2 property should now have changed back to testValue2", "testValue2", System.getProperty("test.key.2"));
 	}
 	
-	@After
-	public void tearDown() {
-		System.setProperties(properties);
-	}
 	
 }
