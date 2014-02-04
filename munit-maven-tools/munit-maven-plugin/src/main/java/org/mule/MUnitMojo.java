@@ -23,16 +23,6 @@ package org.mule;
  */
 
 
-import org.mule.munit.runner.mule.MunitSuiteRunner;
-import org.mule.munit.runner.mule.result.MunitResult;
-import org.mule.munit.runner.mule.result.SuiteResult;
-import org.mule.munit.runner.mule.result.notification.DummyNotificationListener;
-import org.mule.munit.runner.mule.result.notification.NotificationListener;
-import org.mule.munit.runner.output.DefaultOutputHandler;
-import org.mule.notifiers.NotificationListenerDecorator;
-import org.mule.notifiers.StreamNotificationListener;
-import org.mule.notifiers.xml.XmlNotificationListener;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -47,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -54,6 +45,16 @@ import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.mule.munit.runner.mule.MunitSuiteRunner;
+import org.mule.munit.runner.mule.result.MunitResult;
+import org.mule.munit.runner.mule.result.SuiteResult;
+import org.mule.munit.runner.mule.result.notification.DummyNotificationListener;
+import org.mule.munit.runner.mule.result.notification.NotificationListener;
+import org.mule.munit.runner.output.DefaultOutputHandler;
+import org.mule.notifiers.NotificationListenerDecorator;
+import org.mule.notifiers.StreamNotificationListener;
+import org.mule.notifiers.xml.XmlNotificationListener;
+import org.mule.properties.MUnitUserPropertiesManager;
 
 /**
  * Runs tests
@@ -85,6 +86,13 @@ public class MUnitMojo
      * @parameter expression="${log.to.file}" default-value="false"
      */
     protected boolean logToFile;
+    
+    /**
+     * List of System properties to pass to the MUnit tests.
+     * 
+     * @parameter expression="${system.property.variables}"
+     */
+    protected Map<String, String> systemPropertyVariables;
 
     /**
      * The classpath elements of the project being tested.
@@ -94,77 +102,94 @@ public class MUnitMojo
      * @readonly
      */
     protected List<String> classpathElements;
-
-
+    
+    /**
+     * Manager for setting and restoring the user properties defined in the configuration
+     */
+    private MUnitUserPropertiesManager propertiesManager = new MUnitUserPropertiesManager();
+    
     public void execute()
             throws MojoExecutionException
     {
-
         if (!"true".equals(System.getProperty("skipTests")))
         {
-            if (logToFile)
-            {
-                System.setProperty(DefaultOutputHandler.OUTPUT_FOLDER_PROPERTY, project.getBasedir() + TARGET_SUREFIRE_REPORTS_MUNIT_TXT + "%s-output.txt");
-            }
-
-            List testResources = project.getTestResources();
-            for (Object o : testResources)
-            {
-                Resource testResource = (Resource) o;
-                testResource.getTargetPath();
-            }
-
+            propertiesManager.storeInitialSystemProperties();
+            
             try
             {
-                List<SuiteResult> results = new ArrayList<SuiteResult>();
-                addUrlsToClassPath(makeClassPath());
-                File testFolder = new File(project.getBasedir(), "src/test/munit");
-                if (testFolder == null || !testFolder.exists())
-                {
-                    return;
-                }
-                Collection<File> allFiles = FileUtils.listFiles(testFolder, null, true);
-                for (File file : allFiles)
-                {
-                    String fileName = file.getPath().replace(testFolder.getPath() + File.separator, "");
-                    if (fileName.endsWith(".xml") && validateFilter(fileName))
-                    {
-                        results.add(buildRunnerFor(fileName).run());
-                    }
-
-                }
-
-                show(results);
-
-            }
-            catch (MalformedURLException e)
-            {
-                e.printStackTrace();
-            }
-            catch (InvocationTargetException e)
-            {
-                e.printStackTrace();
-            }
-            catch (NoSuchMethodException e)
-            {
-                e.printStackTrace();
-            }
-            catch (IllegalAccessException e)
-            {
-                e.printStackTrace();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            	propertiesManager.addUserPropertiesToSystem(systemPropertyVariables);
+            	doExecute();
             }
             finally
             {
+            	propertiesManager.restoreInitialSystemProperties();
             }
         }
 
     }
 
-    private void show(List<SuiteResult> results) throws MojoExecutionException
+	private void doExecute() throws MojoExecutionException {
+		if (logToFile)
+		{
+		    System.setProperty(DefaultOutputHandler.OUTPUT_FOLDER_PROPERTY, project.getBasedir() + TARGET_SUREFIRE_REPORTS_MUNIT_TXT + "%s-output.txt");
+		}
+
+		List testResources = project.getTestResources();
+		for (Object o : testResources)
+		{
+		    Resource testResource = (Resource) o;
+		    testResource.getTargetPath();
+		}
+
+		try
+		{
+		    List<SuiteResult> results = new ArrayList<SuiteResult>();
+		    addUrlsToClassPath(makeClassPath());
+		    File testFolder = new File(project.getBasedir(), "src/test/munit");
+		    if (testFolder == null || !testFolder.exists())
+		    {
+		        return;
+		    }
+		    Collection<File> allFiles = FileUtils.listFiles(testFolder, null, true);
+		    for (File file : allFiles)
+		    {
+		        String fileName = file.getPath().replace(testFolder.getPath() + File.separator, "");
+		        if (fileName.endsWith(".xml") && validateFilter(fileName))
+		        {
+		            results.add(buildRunnerFor(fileName).run());
+		        }
+
+		    }
+
+		    show(results);
+
+		}
+		catch (MalformedURLException e)
+		{
+		    e.printStackTrace();
+		}
+		catch (InvocationTargetException e)
+		{
+		    e.printStackTrace();
+		}
+		catch (NoSuchMethodException e)
+		{
+		    e.printStackTrace();
+		}
+		catch (IllegalAccessException e)
+		{
+		    e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+		    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+		}
+		finally
+		{
+		}
+	}
+
+	private void show(List<SuiteResult> results) throws MojoExecutionException
     {
         boolean success = true;
 
