@@ -27,8 +27,6 @@ import org.junit.Test;
 
 public class MunitRunnerTest
 {
-
-
     private static final String AFTER_TEST_DESCRIPTION = "After Test Description";
     private static final String AFTER_TEST_NAME = "AfterTestName";
 

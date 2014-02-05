@@ -7,13 +7,18 @@
 package org.mule.munit.runner;
 
 import org.mule.api.MuleContext;
+import org.mule.api.MuleException;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.context.MuleContextBuilder;
+import org.mule.api.context.notification.MessageProcessorNotificationListener;
+import org.mule.api.lifecycle.InitialisationException;
 import org.mule.config.DefaultMuleConfiguration;
 import org.mule.config.builders.SimpleConfigurationBuilder;
 import org.mule.context.DefaultMuleContextBuilder;
 import org.mule.context.DefaultMuleContextFactory;
+import org.mule.context.notification.MessageProcessorNotification;
+import org.mule.munit.common.extensions.MunitPlugin;
 import org.mule.munit.runner.mule.context.MockingConfiguration;
 import org.mule.munit.runner.mule.context.MunitSpringXmlConfigurationBuilder;
 import org.mule.munit.runner.output.DefaultOutputHandler;
@@ -23,6 +28,7 @@ import org.mule.util.ClassUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
@@ -40,9 +46,11 @@ import org.apache.log4j.SimpleLayout;
  */
 public class MuleContextManager
 {
+
     public static final String CLASSNAME_ANNOTATIONS_CONFIG_BUILDER = "org.mule.org.mule.munit.config.AnnotationsConfigurationBuilder";
 
     private MockingConfiguration configuration;
+    private Collection<MunitPlugin> plugins;
 
     public MuleContextManager(MockingConfiguration configuration)
     {
@@ -53,6 +61,7 @@ public class MuleContextManager
     {
         MuleContext context = createMule(resources);
         context.start();
+        startPlugins();
 
         return context;
     }
@@ -64,6 +73,7 @@ public class MuleContextManager
             if (muleContext != null && !muleContext.isStopped())
             {
                 muleContext.stop();
+                stopPlugins();
             }
         }
         catch (Throwable e1)
@@ -73,6 +83,7 @@ public class MuleContextManager
         if (muleContext != null && !muleContext.isDisposed())
         {
             muleContext.dispose();
+            disposePlugins();
         }
     }
 
@@ -100,6 +111,11 @@ public class MuleContextManager
         ((DefaultMuleConfiguration) context.getConfiguration())
                 .setShutdownTimeout(0);
 
+        context.getNotificationManager().setNotificationDynamic(true);
+        context.getNotificationManager().addInterfaceToType(MessageProcessorNotificationListener.class, MessageProcessorNotification.class);
+        plugins = new MunitPluginFactory().loadPlugins(context);
+        initialisePlugins();
+
         return context;
     }
 
@@ -110,7 +126,7 @@ public class MuleContextManager
         {
             properties = new Properties();
         }
-        if  ( properties.get(MuleProperties.APP_HOME_DIRECTORY_PROPERTY) == null )
+        if (properties.get(MuleProperties.APP_HOME_DIRECTORY_PROPERTY) == null)
         {
             properties.setProperty(MuleProperties.APP_HOME_DIRECTORY_PROPERTY, new File(getClass().getResource("/").getPath()).getAbsolutePath());
         }
@@ -130,7 +146,6 @@ public class MuleContextManager
         }
     }
 
-
     protected ConfigurationBuilder getBuilder(String resources) throws Exception
     {
         return new MunitSpringXmlConfigurationBuilder(resources, configuration);
@@ -139,6 +154,38 @@ public class MuleContextManager
     protected void configureMuleContext(MuleContextBuilder contextBuilder)
     {
         contextBuilder.setWorkListener(new TestingWorkListener());
+    }
+
+    private void startPlugins() throws MuleException
+    {
+        for (MunitPlugin plugin : plugins)
+        {
+            plugin.start();
+        }
+    }
+
+    private void disposePlugins()
+    {
+        for (MunitPlugin plugin : plugins)
+        {
+            plugin.dispose();
+        }
+    }
+
+    private void stopPlugins() throws MuleException
+    {
+        for (MunitPlugin plugin : plugins)
+        {
+            plugin.stop();
+        }
+    }
+
+    private void initialisePlugins() throws InitialisationException
+    {
+        for (MunitPlugin plugin : plugins)
+        {
+            plugin.initialise();
+        }
     }
 
 }

@@ -45,17 +45,18 @@ public abstract class FunctionalMunitSuite
 
     protected static MuleContext muleContext;
     
-    private MuleContextManager muleContextManager;
+    private static MuleContextManager muleContextManager;
 
 
 	public FunctionalMunitSuite()
     {
-        muleContextManager = new MuleContextManager(createConfiguration());
+
         try
         {
             if ( muleContext == null || muleContext.isDisposed())
             {
                 String resources = getConfigResources();
+                muleContextManager = new MuleContextManager(createConfiguration());
 
                 muleContext = muleContextManager.startMule(resources);
             }
@@ -334,7 +335,7 @@ public abstract class FunctionalMunitSuite
 
     @AfterClass
 	public static void killMule() throws Throwable {
-    	new MuleContextManager(null).killMule(muleContext);
+    	muleContextManager.killMule(muleContext);
 	}
 
 }

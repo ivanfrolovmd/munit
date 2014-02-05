@@ -31,8 +31,6 @@ import org.junit.Test;
 
 public class SuiteBuilderTest
 {
-
-
     private MuleContext muleContext;
     private MuleRegistry registry;
     private List<MunitAfterTest> afterTestFlows = new ArrayList<MunitAfterTest>();

@@ -8,139 +8,7 @@
                namespace="http://www.springframework.org/schema/beans"></xs:import>
     <xs:import schemaLocation="http://www.mulesoft.org/schema/mule/core/current/mule.xsd"
                namespace="http://www.mulesoft.org/schema/mule/core"></xs:import>
-    <xs:simpleType name="integerType">
-        <xs:union>
-            <xs:simpleType>
-                <xs:restriction base="xs:integer"></xs:restriction>
-            </xs:simpleType>
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:pattern value="(\#\[[^\]]+\]|\$\{[^\}]+\})"></xs:pattern>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:union>
-    </xs:simpleType>
-    <xs:simpleType name="decimalType">
-        <xs:union>
-            <xs:simpleType>
-                <xs:restriction base="xs:decimal"></xs:restriction>
-            </xs:simpleType>
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:pattern value="(\#\[[^\]]+\]|\$\{[^\}]+\})"></xs:pattern>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:union>
-    </xs:simpleType>
-    <xs:simpleType name="floatType">
-        <xs:union>
-            <xs:simpleType>
-                <xs:restriction base="xs:float"></xs:restriction>
-            </xs:simpleType>
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:pattern value="(\#\[[^\]]+\]|\$\{[^\}]+\})"></xs:pattern>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:union>
-    </xs:simpleType>
-    <xs:simpleType name="doubleType">
-        <xs:union>
-            <xs:simpleType>
-                <xs:restriction base="xs:double"></xs:restriction>
-            </xs:simpleType>
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:pattern value="(\#\[[^\]]+\]|\$\{[^\}]+\})"></xs:pattern>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:union>
-    </xs:simpleType>
-    <xs:simpleType name="dateTimeType">
-        <xs:union>
-            <xs:simpleType>
-                <xs:restriction base="xs:dateTime"></xs:restriction>
-            </xs:simpleType>
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:pattern value="(\#\[[^\]]+\]|\$\{[^\}]+\})"></xs:pattern>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:union>
-    </xs:simpleType>
-    <xs:simpleType name="longType">
-        <xs:union>
-            <xs:simpleType>
-                <xs:restriction base="xs:long"></xs:restriction>
-            </xs:simpleType>
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:pattern value="(\#\[[^\]]+\]|\$\{[^\}]+\})"></xs:pattern>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:union>
-    </xs:simpleType>
-    <xs:simpleType name="byteType">
-        <xs:union>
-            <xs:simpleType>
-                <xs:restriction base="xs:byte"></xs:restriction>
-            </xs:simpleType>
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:pattern value="(\#\[[^\]]+\]|\$\{[^\}]+\})"></xs:pattern>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:union>
-    </xs:simpleType>
-    <xs:simpleType name="booleanType">
-        <xs:union>
-            <xs:simpleType>
-                <xs:restriction base="xs:boolean"></xs:restriction>
-            </xs:simpleType>
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:pattern value="(\#\[[^\]]+\]|\$\{[^\}]+\})"></xs:pattern>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:union>
-    </xs:simpleType>
-    <xs:simpleType name="anyUriType">
-        <xs:union>
-            <xs:simpleType>
-                <xs:restriction base="xs:anyURI"></xs:restriction>
-            </xs:simpleType>
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:pattern value="(\#\[[^\]]+\]|\$\{[^\}]+\})"></xs:pattern>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:union>
-    </xs:simpleType>
-    <xs:simpleType name="charType">
-        <xs:union>
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:minLength value="1"></xs:minLength>
-                    <xs:maxLength value="1"></xs:maxLength>
-                </xs:restriction>
-            </xs:simpleType>
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:pattern value="(\#\[[^\]]+\]|\$\{[^\}]+\})"></xs:pattern>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:union>
-    </xs:simpleType>
-    <xs:complexType name="XmlType">
-        <xs:sequence>
-            <xs:any maxOccurs="unbounded" minOccurs="0" processContents="lax"></xs:any>
-        </xs:sequence>
-        <xs:attribute name="ref" use="optional" type="xs:string">
-            <xs:annotation>
-                <xs:documentation>The reference object for this parameter</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-    </xs:complexType>
+
     <xs:element xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="config"
                 substitutionGroup="mule:abstract-extension">
         <xs:complexType>
@@ -234,7 +102,7 @@
                     </xs:annotation>
                 </xs:attribute>
                 <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/munit" name="condition" use="required"
-                              type="booleanType">
+                              type="mule:substitutableBoolean">
                     <xs:annotation>
                         <xs:documentation>Boolean expression</xs:documentation>
                     </xs:annotation>
@@ -363,7 +231,7 @@
                     </xs:annotation>
                 </xs:attribute>
                 <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/munit" name="condition" use="required"
-                              type="booleanType">
+                              type="mule:substitutableBoolean">
                     <xs:annotation>
                         <xs:documentation>Boolean expression</xs:documentation>
                     </xs:annotation>
