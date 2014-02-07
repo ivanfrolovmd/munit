@@ -9,12 +9,10 @@ package org.mule.munit.common.mp;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import org.mule.api.processor.LoggerMessageProcessor;
 
-import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodProxy;
 import org.junit.Test;
 
@@ -49,8 +47,6 @@ public class MessageProcessorFactoryBeanInterceptorTest
 
         MessageProcessorFactoryBeanInterceptor interceptor = new MessageProcessorFactoryBeanInterceptor();
         Object enhancedOriginal = interceptor.intercept(obj, Object.class.getDeclaredMethod("hashCode"), args, proxied);
-
-        assertTrue(Enhancer.isEnhanced(enhancedOriginal.getClass()));
 
         when(proxied.invokeSuper(obj, args)).thenReturn(enhancedOriginal);
 
