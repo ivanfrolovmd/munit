@@ -59,6 +59,15 @@ public class WrapperMunitMessageProcessorInterceptorTest
 
     }
 
+    @Test
+    public void classIsNotAMessageProcessor() throws Throwable
+    {
+        WrapperMunitMessageProcessorInterceptor interceptor = new MockedInterceptor(mock(MessageProcessor.class));
+
+        interceptor.intercept(new Object(), Object.class.getMethod("hashCode"), new Object[0], proxy);
+
+    }
+
 
     private static class MockedInterceptor extends WrapperMunitMessageProcessorInterceptor
     {
