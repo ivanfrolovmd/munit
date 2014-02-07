@@ -9,6 +9,7 @@ package org.mule.munit.common.mp;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import org.mule.api.MuleEvent;
 import org.mule.api.processor.LoggerMessageProcessor;
 import org.mule.api.processor.MessageProcessor;
@@ -23,7 +24,7 @@ import org.junit.Test;
 public class WrapperMunitMessageProcessorInterceptorTest
 {
 
-    private MessageProcessor realMessageProcessor = mock(MessageProcessor.class);
+    private LoggerMessageProcessor realMessageProcessor = mock(LoggerMessageProcessor.class);
     private MethodProxy proxy = mock(MethodProxy.class);
 
 
@@ -36,6 +37,28 @@ public class WrapperMunitMessageProcessorInterceptorTest
 
         assertEquals("anything", mockedValue);
     }
+
+    @Test
+    public void whenIsAMessageProcessorAndMethodIsNotProcess() throws Throwable
+    {
+        WrapperMunitMessageProcessorInterceptor interceptor = new MockedInterceptor(realMessageProcessor);
+
+        LoggerMessageProcessor obj = new LoggerMessageProcessor();
+        interceptor.intercept(obj, LoggerMessageProcessor.class.getMethod("initialise"), new Object[0], proxy);
+
+        verify(realMessageProcessor).initialise();
+    }
+
+    @Test
+    public void makeItFail() throws Throwable
+    {
+        WrapperMunitMessageProcessorInterceptor interceptor = new MockedInterceptor(mock(MessageProcessor.class));
+
+        LoggerMessageProcessor obj = new LoggerMessageProcessor();
+        interceptor.intercept(obj, LoggerMessageProcessor.class.getMethod("initialise"), new Object[0], proxy);
+
+    }
+
 
     private static class MockedInterceptor extends WrapperMunitMessageProcessorInterceptor
     {
