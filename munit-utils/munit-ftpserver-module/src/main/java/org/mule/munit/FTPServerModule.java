@@ -24,7 +24,7 @@ import javax.annotation.PostConstruct;
  *
  * @author Mulesoft Inc.
  */
-@Module(name = "ftpserver", schemaVersion = "1.0")
+@Module(name = "ftpserver", schemaVersion = "1.0", minMuleVersion = "3.4.0", friendlyName = "FTP Server")
 @Category(name = "org.mule.tooling.category.munit.utils", description = "Munit tools")
 public class FTPServerModule
 {

@@ -25,7 +25,7 @@ import java.util.Map;
  * @author Casal, Javier
  * @author Scandroglio, Matias
  */
-@Module(name = "mclient", schemaVersion = "1.0")
+@Module(name = "mclient", schemaVersion = "1.0", minMuleVersion = "3.4.0", friendlyName = "Mule Client")
 @Category(name = "org.mule.tooling.category.munit.utils", description = "Munit tools")
 public class MClient implements MuleContextAware
 {

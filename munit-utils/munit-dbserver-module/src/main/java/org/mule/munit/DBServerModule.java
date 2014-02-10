@@ -21,7 +21,7 @@ import org.mule.api.annotations.param.Optional;
  * @author Mulesoft Inc.
  * @author Casal, Javier
  */
-@Module(name = "dbserver", schemaVersion = "1.0")
+@Module(name = "dbserver", schemaVersion = "1.0", minMuleVersion = "3.4.0", friendlyName = "DB Server")
 @Category(name = "org.mule.tooling.category.munit.utils", description = "Munit tools")
 public class DBServerModule
 {
