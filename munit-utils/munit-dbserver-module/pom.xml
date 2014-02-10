@@ -9,7 +9,7 @@
     </parent>
     <artifactId>munit-dbserver-module</artifactId>
     <packaging>mule-module</packaging>
-    <name>Database Server</name>
+    <name>Database Server for integration testing</name>
 
     <properties>
         <licensePath>../../LICENSE_HEADER.txt</licensePath>
