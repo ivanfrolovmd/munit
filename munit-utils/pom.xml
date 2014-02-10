@@ -15,7 +15,7 @@
         <module>munit-mailserver-module</module>
         <module>munit-dbserver-module</module>
         <module>munit-ftpserver-module</module>
-
+        <module>munit-utils-update-site</module>
     </modules>
 
     <properties>
