@@ -34,6 +34,8 @@ munit-utils/munit-dbserver-module/target
 munit-utils/munit-ftpserver-module/.settings
 munit-utils/munit-ftpserver-module/.idea
 munit-utils/munit-ftpserver-module/target
+munit-utils/munit-utils-update-site/target
+munit-utils/munit-utils-update-site/.idea
 munit-utils/common
 tooling/munit-eclipse-plugin/.idea
 tooling/munit-eclipse-plugin/.settings
