@@ -1,15 +1,15 @@
 <!-- BEGIN_INCLUDE(mclient:call) -->
-    <mclient:call path="http://localhost:10443/updateSalesforceTemplate" payload-ref="upsertHttpParameters"/>
+<mclient:call path="http://localhost:10443/updateSalesforceTemplate" payload-ref="upsertHttpParameters"/>
 <!-- END_INCLUDE(mclient:call) -->
 
 <!-- BEGIN_INCLUDE(mclient:dispatch) -->
-    <mclient:dispatch path="http://localhost:10443/updateSalesforceTemplate" payload-ref="upsertHttpParameters" />
+<mclient:dispatch path="http://localhost:10443/updateSalesforceTemplate" payload-ref="upsertHttpParameters" />
 <!-- END_INCLUDE(mclient:dispatch) -->
 
 <!-- BEGIN_INCLUDE(mclient:request) -->
-            <mclient:request url="http://localhost:10443/campaignInfo" timeout="100"/>
+ <mclient:request url="http://localhost:10443/campaignInfo" timeout="100"/>
 <!-- END_INCLUDE(mclient:request) -->
 
- <!-- BEGIN_INCLUDE(mclient:request) -->
-             <mclient:send url="http://localhost:10443/campaignInfo" payload-ref="#[string:something]" timeout="100"/>
- <!-- END_INCLUDE(mclient:request) -->
+ <!-- BEGIN_INCLUDE(mclient:send) -->
+ <mclient:send url="http://localhost:10443/campaignInfo" payload-ref="#[string:something]" timeout="100"/>
+ <!-- END_INCLUDE(mclient:send) -->
