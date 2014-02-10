@@ -9,11 +9,11 @@ package org.mule.munit;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleMessage;
 import org.mule.api.NestedProcessor;
+import org.mule.api.annotations.Category;
 import org.mule.api.annotations.Module;
 import org.mule.api.annotations.Processor;
 import org.mule.api.annotations.param.Optional;
 import org.mule.api.context.MuleContextAware;
-
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +26,7 @@ import java.util.Map;
  * @author Scandroglio, Matias
  */
 @Module(name = "mclient", schemaVersion = "1.0")
+@Category(name = "org.mule.tooling.category.munit.utils", description = "Munit tools")
 public class MClient implements MuleContextAware
 {
 

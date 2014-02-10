@@ -9,6 +9,7 @@
  */
 package org.mule.munit;
 
+import org.mule.api.annotations.Category;
 import org.mule.api.annotations.Configurable;
 import org.mule.api.annotations.Module;
 import org.mule.api.annotations.Processor;
@@ -21,6 +22,7 @@ import org.mule.api.annotations.param.Optional;
  * @author Casal, Javier
  */
 @Module(name = "dbserver", schemaVersion = "1.0")
+@Category(name = "org.mule.tooling.category.munit.utils", description = "Munit tools")
 public class DBServerModule
 {
 

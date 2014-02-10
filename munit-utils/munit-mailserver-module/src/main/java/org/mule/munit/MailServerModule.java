@@ -6,14 +6,14 @@
  */
 package org.mule.munit;
 
+import org.mule.api.annotations.Category;
 import org.mule.api.annotations.Module;
 import org.mule.api.annotations.Processor;
-import org.mule.munit.MailServer;
+
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.mail.internet.MimeMessage;
-
-import java.util.List;
 
 /**
  * <p>Module for mail integration testing.</p>
@@ -21,6 +21,7 @@ import java.util.List;
  * @author Mulesoft Inc.
  */
 @Module(name = "mail-server", schemaVersion = "1.0")
+@Category(name = "org.mule.tooling.category.munit.utils", description = "Munit tools")
 public class MailServerModule
 {
 
