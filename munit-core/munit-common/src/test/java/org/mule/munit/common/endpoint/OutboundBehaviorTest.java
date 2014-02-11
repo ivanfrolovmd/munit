@@ -6,16 +6,15 @@
  */
 package org.mule.munit.common.endpoint;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import org.mule.api.MuleMessage;
+import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 import org.mule.api.processor.MessageProcessor;
+import org.mule.modules.interceptor.processors.MuleMessageTransformer;
 
 import java.util.ArrayList;
 
-import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Mulesoft Inc.
@@ -25,21 +24,21 @@ public class OutboundBehaviorTest
 {
 
     public static final ArrayList<MessageProcessor> ASSERTIONS = new ArrayList<MessageProcessor>();
-    private MuleMessage message;
+    private MuleMessageTransformer transformer;
 
     @Before
     public void setUp()
     {
-        message = mock(MuleMessage.class);
+        transformer = mock(MuleMessageTransformer.class);
     }
 
     @Test
     public void testGetters()
     {
-        OutboundBehavior behavior = new OutboundBehavior(message, ASSERTIONS);
+        OutboundBehavior behavior = new OutboundBehavior(transformer, ASSERTIONS);
 
 
         assertEquals(ASSERTIONS, behavior.getAssertions());
-        assertEquals(message, behavior.getMessage());
+        assertEquals(transformer, behavior.getMuleMessageTransformer());
     }
 }

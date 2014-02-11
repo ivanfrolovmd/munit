@@ -6,12 +6,14 @@
  */
 package org.mule.munit.common.mocking;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.processor.MessageProcessor;
+import org.mule.modules.interceptor.processors.MuleMessageTransformer;
 import org.mule.munit.common.endpoint.MockEndpointManager;
 import org.mule.munit.common.endpoint.OutboundBehavior;
 
@@ -113,12 +115,47 @@ public class EndpointMocker
      */
     public void thenReturn(MuleMessage message)
     {
-        OutboundBehavior behavior = new OutboundBehavior(message, createMessageProcessorFromSpy(process));
+        OutboundBehavior behavior = new OutboundBehavior(new CopyMessageTransformer((DefaultMuleMessage) message),
+                                                         createMessageProcessorFromSpy(process));
 
-        MockEndpointManager factory = (MockEndpointManager) muleContext.getRegistry().lookupObject(MuleProperties.OBJECT_MULE_ENDPOINT_FACTORY);
+        MockEndpointManager factory = muleContext.getRegistry().lookupObject(MuleProperties.OBJECT_MULE_ENDPOINT_FACTORY);
         factory.addBehavior(address, behavior);
     }
 
+    /**
+     * <p>
+     * Makes the outbound endpoint to fail with an exception
+     * </p>
+     *
+     * @param exception <p>
+     *                The exception to thrown
+     *                </p>
+     */
+    public void thenThrow(MuleException exception)
+    {
+        OutboundBehavior behavior = new OutboundBehavior(exception, createMessageProcessorFromSpy(process));
+
+        MockEndpointManager factory = muleContext.getRegistry().lookupObject(MuleProperties.OBJECT_MULE_ENDPOINT_FACTORY);
+        factory.addBehavior(address, behavior);
+    }
+
+
+    /**
+     * <p>
+     * Makes the outbound endpoint apply a custom transformer
+     * </p>
+     *
+     * @param transformer <p>
+     *                {@link MuleMessageTransformer} to be applied
+     *                </p>
+     */
+    public void thenApply(MuleMessageTransformer transformer)
+    {
+        OutboundBehavior behavior = new OutboundBehavior(transformer, createMessageProcessorFromSpy(process));
+
+        MockEndpointManager factory = muleContext.getRegistry().lookupObject(MuleProperties.OBJECT_MULE_ENDPOINT_FACTORY);
+        factory.addBehavior(address, behavior);
+    }
 
     protected List<MessageProcessor> createMessageProcessorFromSpy(final List<SpyProcess> process)
     {

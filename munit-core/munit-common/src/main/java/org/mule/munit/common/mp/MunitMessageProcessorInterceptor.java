@@ -6,7 +6,6 @@
  */
 package org.mule.munit.common.mp;
 
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.processor.MessageProcessor;
@@ -48,7 +47,9 @@ public class MunitMessageProcessorInterceptor extends AbstractMessageProcessorIn
                 throw behavior.getExceptionToThrow();
             }
 
-            MunitUtils.copyMessage((DefaultMuleMessage) behavior.getReturnMuleMessage(), (DefaultMuleMessage) event.getMessage());
+            if ( behavior.getMuleMessageTransformer() != null ){
+                event.setMessage(behavior.getMuleMessageTransformer().transform(event.getMessage()));
+            }
 
             runSpyAssertion(manager.getBetterMatchingAfterSpyAssertion(messageProcessorCall), event);
             return event;

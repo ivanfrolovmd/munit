@@ -10,8 +10,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
-import org.mule.api.MuleMessage;
 import org.mule.api.registry.MuleRegistry;
 import org.mule.modules.interceptor.processors.MessageProcessorBehavior;
 import org.mule.munit.common.mp.MockedMessageProcessorManager;
@@ -31,7 +31,7 @@ public class MessageProcessorMockerTest
     private MuleContext muleContext;
     private MuleRegistry muleRegistry;
     private MockedMessageProcessorManager manager;
-    private MuleMessage message;
+    private DefaultMuleMessage message;
 
     @Before
     public void setUp()
@@ -39,7 +39,7 @@ public class MessageProcessorMockerTest
         muleContext = mock(MuleContext.class);
         muleRegistry = mock(MuleRegistry.class);
         manager = mock(MockedMessageProcessorManager.class);
-        message = mock(MuleMessage.class);
+        message = mock(DefaultMuleMessage.class);
 
         when(muleContext.getRegistry()).thenReturn(muleRegistry);
         when(muleRegistry.lookupObject(MockedMessageProcessorManager.ID)).thenReturn(manager);
@@ -99,7 +99,15 @@ public class MessageProcessorMockerTest
     @Test
     public void validateThatBehaviorIsAddedWhenThenReturnSame()
     {
-        mocker().when("mp").thenThrow(new Exception());
+        mocker().when("mp").thenReturnSameEvent();
+
+        verify(manager).addBehavior(any(MessageProcessorBehavior.class));
+    }
+
+    @Test
+    public void validateThatBehaviorIsAddedWhenThenApply()
+    {
+        mocker().when("mp").thenApply(new CopyMessageTransformer(null));
 
         verify(manager).addBehavior(any(MessageProcessorBehavior.class));
     }

@@ -24,6 +24,7 @@ import org.mule.api.processor.MessageProcessor;
 import org.mule.modules.interceptor.processors.MessageProcessorBehavior;
 import org.mule.modules.interceptor.processors.MessageProcessorCall;
 import org.mule.modules.interceptor.processors.MessageProcessorId;
+import org.mule.munit.common.mocking.CopyMessageTransformer;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -266,7 +267,7 @@ public class MunitMessageProcessorInterceptorTest
 
     private MessageProcessorBehavior returnValueBehavior()
     {
-        return new MessageProcessorBehavior(MESSAGE_PROCESSOR_CALL, muleMessage());
+        return new MessageProcessorBehavior(MESSAGE_PROCESSOR_CALL, new CopyMessageTransformer((DefaultMuleMessage) muleMessage()));
     }
 
     private MuleMessage muleMessage()

@@ -12,6 +12,7 @@ import org.mule.api.MuleMessage;
 import org.mule.modules.interceptor.processors.MessageProcessorBehavior;
 import org.mule.modules.interceptor.processors.MessageProcessorCall;
 import org.mule.modules.interceptor.processors.MessageProcessorId;
+import org.mule.modules.interceptor.processors.MuleMessageTransformer;
 import org.mule.munit.common.mp.MockedMessageProcessorManager;
 
 import java.util.HashMap;
@@ -133,7 +134,7 @@ public class MessageProcessorMocker extends MunitMockingTool
         MockedMessageProcessorManager manager = getManager();
         MessageProcessorCall messageProcessorCall = new MessageProcessorCall(new MessageProcessorId(messageProcessorName, messageProcessorNamespace));
         messageProcessorCall.setAttributes(messageProcessorAttributes);
-        manager.addBehavior(new MessageProcessorBehavior(messageProcessorCall, message));
+        manager.addBehavior(new MessageProcessorBehavior(messageProcessorCall, new CopyMessageTransformer((DefaultMuleMessage) message)));
     }
 
     /**
@@ -168,8 +169,22 @@ public class MessageProcessorMocker extends MunitMockingTool
         MockedMessageProcessorManager manager = getManager();
         MessageProcessorCall messageProcessorCall = new MessageProcessorCall(new MessageProcessorId(messageProcessorName, messageProcessorNamespace));
         messageProcessorCall.setAttributes(messageProcessorAttributes);
-        manager.addBehavior(new MessageProcessorBehavior(messageProcessorCall, new DefaultMuleMessage(NotDefinedPayload.getInstance(), muleContext)));
+        manager.addBehavior(new MessageProcessorBehavior(messageProcessorCall, new CopyMessageTransformer(new DefaultMuleMessage(NotDefinedPayload.getInstance(), muleContext))));
+    }
 
+    /**
+     * <p>
+     * Define which transformation you want to apply to the message processor
+     * </p>
+     */
+    public void thenApply(MuleMessageTransformer transformer)
+    {
+        validateMessageProcessorName();
+
+        MockedMessageProcessorManager manager = getManager();
+        MessageProcessorCall messageProcessorCall = new MessageProcessorCall(new MessageProcessorId(messageProcessorName, messageProcessorNamespace));
+        messageProcessorCall.setAttributes(messageProcessorAttributes);
+        manager.addBehavior(new MessageProcessorBehavior(messageProcessorCall, transformer));
     }
 
     private void validateMessageProcessorName()

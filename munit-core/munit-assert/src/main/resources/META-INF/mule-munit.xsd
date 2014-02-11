@@ -492,6 +492,8 @@
         </xs:complexContent>
     </xs:complexType>
 
+
+
     <xs:element xmlns="http://www.mulesoft.org/schema/mule/munit" xmlns:mule="http://www.mulesoft.org/schema/mule/core"
                 substitutionGroup="mule:abstract-flow-construct" name="test" type="munitTestType">
         <xs:annotation>

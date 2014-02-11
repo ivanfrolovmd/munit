@@ -6,10 +6,11 @@
  */
 package org.mule.java;
 
-import org.junit.Test;
-
+import static junit.framework.Assert.assertEquals;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
+import org.mule.modules.interceptor.processors.MuleMessageTransformer;
 import org.mule.munit.common.mocking.SpyProcess;
 import org.mule.munit.runner.functional.FunctionalMunitSuite;
 
@@ -18,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static junit.framework.Assert.assertEquals;
+import org.junit.Test;
 
 public class MpMockingJavaTest extends FunctionalMunitSuite
 {
@@ -86,6 +87,26 @@ public class MpMockingJavaTest extends FunctionalMunitSuite
 
         assertEquals("createGroupResult", eventResult.getMessage().getPayload());
         assertEquals("someGroup", eventResult.getMessage().getInvocationProperty("job"));
+    }
+
+
+    @Test
+    public void mockingEndpointWithTransformer() throws Exception
+    {
+        whenEndpointWithAddress("http://localhost:10443/test")
+                .thenApply(new MuleMessageTransformer()
+                {
+                    @Override
+                    public MuleMessage transform(MuleMessage original)
+                    {
+                        original.setInvocationProperty("newProperty", "propertyValue");
+                        return original;
+                    }
+                });
+
+        MuleEvent eventResult = runFlow("outboundEndPointFlow", testEvent(" Hello world!]"));
+
+        assertEquals("propertyValue", eventResult.getMessage().getInvocationProperty("newProperty"));
     }
 
 

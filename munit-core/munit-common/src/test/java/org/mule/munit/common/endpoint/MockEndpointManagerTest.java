@@ -6,18 +6,18 @@
  */
 package org.mule.munit.common.endpoint;
 
-import org.junit.Before;
-import org.junit.Test;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleException;
 import org.mule.api.endpoint.EndpointBuilder;
 import org.mule.api.endpoint.EndpointFactory;
 import org.mule.api.endpoint.EndpointURI;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Mulesoft Inc.
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 public class MockEndpointManagerTest
 {
 
-    public static final OutboundBehavior OUTBOUND_BEHAVIOR = new OutboundBehavior(null, null);
+    public static final OutboundBehavior OUTBOUND_BEHAVIOR = new OutboundBehavior(new DefaultMuleException("error"), null);
     EndpointFactory realFactory;
     EndpointURI endpointURI;
     EndpointBuilder endpointBuilder;

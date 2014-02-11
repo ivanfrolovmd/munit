@@ -10,6 +10,8 @@ import static junit.framework.Assert.assertEquals;
 import static org.mule.modules.interceptor.matchers.Matchers.contains;
 import static org.mule.munit.common.mocking.Attribute.attribute;
 import org.mule.api.MuleEvent;
+import org.mule.api.MuleMessage;
+import org.mule.modules.interceptor.processors.MuleMessageTransformer;
 import org.mule.munit.runner.functional.FunctionalMunitSuite;
 
 import java.io.File;
@@ -37,7 +39,6 @@ public class JavaMunitTest extends FunctionalMunitSuite
 
         Object payload = runFlow("callingJira", testEvent("something")).getMessage().getPayload();
 
-        Thread.sleep(3000);
         assertEquals("expected", payload);
     }
 
@@ -63,6 +64,26 @@ public class JavaMunitTest extends FunctionalMunitSuite
         assertEquals(runFlow("callingFlow", testEvent("something")).getMessage().getPayload(), "hello world");
     }
 
+    @Test
+    public void mockingMessageProcessorWithTransformer() throws Exception
+    {
+        whenMessageProcessor("create.*")
+                .ofNamespace("ji.*")
+                .withAttributes(attribute("name").ofNamespace("doc").withValue("jiraMp"))
+                .thenApply(new MuleMessageTransformer()
+                {
+                    @Override
+                    public MuleMessage transform(MuleMessage original)
+                    {
+                        original.setPayload("transformerActing");
+                        return original;
+                    }
+                });
+
+        Object payload = runFlow("callingJira", testEvent("transformerActing")).getMessage().getPayload();
+
+        assertEquals("transformerActing", payload);
+    }
 
     @Test
     public void testUntilSuccessful() throws Exception

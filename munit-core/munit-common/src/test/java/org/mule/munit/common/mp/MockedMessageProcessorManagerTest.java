@@ -10,11 +10,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
 import org.mule.modules.interceptor.matchers.EqMatcher;
 import org.mule.modules.interceptor.processors.MessageProcessorBehavior;
 import org.mule.modules.interceptor.processors.MessageProcessorCall;
 import org.mule.modules.interceptor.processors.MessageProcessorId;
+import org.mule.munit.common.mocking.CopyMessageTransformer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +41,7 @@ public class MockedMessageProcessorManagerTest
     @Before
     public void setUp()
     {
-        muleMessage = mock(MuleMessage.class);
+        muleMessage = mock(DefaultMuleMessage.class);
     }
 
     @Test
@@ -98,7 +100,7 @@ public class MockedMessageProcessorManagerTest
     {
         MockedMessageProcessorManager manager = new MockedMessageProcessorManager();
         manager.addCall(createCall());
-        manager.addBehavior(new MessageProcessorBehavior(createCall(), muleMessage));
+        manager.addBehavior(new MessageProcessorBehavior(createCall(), new CopyMessageTransformer((DefaultMuleMessage) muleMessage)));
         manager.addBeforeCallSpyAssertion(new SpyAssertion(null, null));
         manager.addAfterCallSpyAssertion(new SpyAssertion(null, null));
 
@@ -117,8 +119,8 @@ public class MockedMessageProcessorManagerTest
         Map<String, Object> attributes = bestMatchingCall.getAttributes();
         attributes.put("attr2", "attrValue2");
 
-        manager.addBehavior(new MessageProcessorBehavior(createCall(), muleMessage));
-        manager.addBehavior(new MessageProcessorBehavior(bestMatchingCall, muleMessage));
+        manager.addBehavior(new MessageProcessorBehavior(createCall(), new CopyMessageTransformer((DefaultMuleMessage) muleMessage)));
+        manager.addBehavior(new MessageProcessorBehavior(bestMatchingCall, new CopyMessageTransformer((DefaultMuleMessage) muleMessage)));
 
         MessageProcessorBehavior matched = manager.getBetterMatchingBehavior(bestMatchingCall);
 

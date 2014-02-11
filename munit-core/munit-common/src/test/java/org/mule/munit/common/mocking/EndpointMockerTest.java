@@ -6,9 +6,13 @@
  */
 package org.mule.munit.common.mocking;
 
-import org.junit.Before;
-import org.junit.Test;
-
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
@@ -22,10 +26,8 @@ import org.mule.munit.common.endpoint.OutboundBehavior;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Mulesoft Inc.
@@ -45,7 +47,7 @@ public class EndpointMockerTest
     public void setUp()
     {
         muleContext = mock(MuleContext.class);
-        muleMessage = mock(MuleMessage.class);
+        muleMessage = mock(DefaultMuleMessage.class);
         muleRegistry = mock(MuleRegistry.class);
         endpointManager = mock(MockEndpointManager.class);
         mockEvent = mock(MuleEvent.class);
@@ -63,6 +65,22 @@ public class EndpointMockerTest
         endpointMocker.whenEndpointWithAddress(ADDRESS)
                 .withIncomingMessageSatisfying(createSpyProcess(spyProcess))
                 .thenReturn(muleMessage);
+
+
+        verify(endpointManager).addBehavior(eq(ADDRESS), any(OutboundBehavior.class));
+        assertTrue(spyProcess.called);
+
+    }
+
+    @Test
+    public void testThenApplyCorrectly()
+    {
+
+        SpyProcessImpl spyProcess = (SpyProcessImpl) spyProcess();
+        EndpointMocker endpointMocker = new MockEndpointMocker(muleContext);
+        endpointMocker.whenEndpointWithAddress(ADDRESS)
+                .withIncomingMessageSatisfying(createSpyProcess(spyProcess))
+                .thenApply(new CopyMessageTransformer((DefaultMuleMessage) muleMessage));
 
 
         verify(endpointManager).addBehavior(eq(ADDRESS), any(OutboundBehavior.class));

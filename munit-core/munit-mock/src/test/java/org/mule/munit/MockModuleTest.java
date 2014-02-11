@@ -6,22 +6,36 @@
  */
 package org.mule.munit;
 
-import org.junit.Test;
-import org.mule.api.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.anyMap;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.notNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.mule.api.DefaultMuleException;
+import org.mule.api.MuleContext;
+import org.mule.api.MuleEvent;
+import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.NestedProcessor;
 import org.mule.api.processor.MessageProcessor;
-import org.mule.munit.common.mocking.*;
+import org.mule.modules.interceptor.processors.MuleMessageTransformer;
+import org.mule.munit.common.mocking.EndpointMocker;
+import org.mule.munit.common.mocking.MessageProcessorMocker;
+import org.mule.munit.common.mocking.MunitSpy;
+import org.mule.munit.common.mocking.MunitVerifier;
+import org.mule.munit.common.mocking.SpyProcess;
+import org.mule.transformer.AbstractMessageTransformer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyList;
-import static org.mockito.Matchers.anyMap;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.notNull;
-import static org.mockito.Mockito.*;
+import org.junit.Test;
 
 /**
  * @author Mulesoft Inc.
@@ -52,13 +66,14 @@ public class MockModuleTest
     private MunitSpy spy = mock(MunitSpy.class);
     private MessageProcessor messageProcessor = mock(MessageProcessor.class);
     private MunitVerifier verifier = mock(MunitVerifier.class);
+    private AbstractMessageTransformer muleTransformer = mock(AbstractMessageTransformer.class);
 
     @Test
     public void whenMethodCanHandlerNullOptionals()
     {
         defineMockerBehavior();
 
-        module().when(NAMESPACE + ":" + MESSAGE_PROCESSOR, null, null);
+        module().when(NAMESPACE + ":" + MESSAGE_PROCESSOR, null, null, null);
 
         verify(mocker, times(1)).when(MESSAGE_PROCESSOR);
         verify(mocker, times(1)).ofNamespace(NAMESPACE);
@@ -71,7 +86,7 @@ public class MockModuleTest
     {
         defineMockerBehavior();
 
-        module().when(NAMESPACE + ":" + MESSAGE_PROCESSOR, createAttributes(), null);
+        module().when(NAMESPACE + ":" + MESSAGE_PROCESSOR, createAttributes(), null, null);
 
         verify(mocker, times(1)).when(MESSAGE_PROCESSOR);
         verify(mocker, times(1)).ofNamespace(NAMESPACE);
@@ -80,11 +95,38 @@ public class MockModuleTest
     }
 
     @Test
+    public void applyTransformer()
+    {
+        defineMockerBehavior();
+
+        module().when(NAMESPACE + ":" + MESSAGE_PROCESSOR, createAttributes(), null, muleTransformer);
+
+        verify(mocker, times(1)).when(MESSAGE_PROCESSOR);
+        verify(mocker, times(1)).ofNamespace(NAMESPACE);
+        verify(mocker, times(1)).withAttributes((Map<String, Object>) notNull());
+        verify(mocker, times(1)).thenApply((MuleMessageTransformer) notNull());
+    }
+
+    @Test
+    public void applyInvalidTransformer()
+    {
+        defineMockerBehavior();
+
+        module().when(NAMESPACE + ":" + MESSAGE_PROCESSOR, createAttributes(), null, new Object());
+
+        verify(mocker, times(1)).when(MESSAGE_PROCESSOR);
+        verify(mocker, times(1)).ofNamespace(NAMESPACE);
+        verify(mocker, times(1)).withAttributes((Map<String, Object>) notNull());
+        verify(mocker, times(0)).thenApply((MuleMessageTransformer) notNull());
+    }
+
+
+    @Test
     public void noNamespaceMeansMuleNamespace()
     {
         defineMockerMuleNamespaceBehavior();
 
-        module().when(MESSAGE_PROCESSOR, createAttributes(), null);
+        module().when(MESSAGE_PROCESSOR, createAttributes(), null, null);
 
         verify(mocker, times(1)).when(MESSAGE_PROCESSOR);
         verify(mocker, times(1)).ofNamespace("mule");
@@ -97,7 +139,7 @@ public class MockModuleTest
     {
         defineMockerBehavior();
 
-        module().when(NAMESPACE + ":" + MESSAGE_PROCESSOR, createAttributes(), createMuleMessage());
+        module().when(NAMESPACE + ":" + MESSAGE_PROCESSOR, createAttributes(), createMuleMessage(), null);
 
         verify(mocker, times(1)).when(MESSAGE_PROCESSOR);
         verify(mocker, times(1)).ofNamespace(NAMESPACE);
@@ -134,7 +176,7 @@ public class MockModuleTest
     {
         endpointMockerBehavior();
 
-        module().outboundEndpoint(ADDRESS, null, null, null, null, null, null);
+        module().outboundEndpoint(ADDRESS, null, null, null, null, null, null, null, null);
 
         verify(endpointMocker, times(1)).whenEndpointWithAddress(ADDRESS);
         verify(endpointMocker, times(1)).withIncomingMessageSatisfying((List<SpyProcess>) notNull());
@@ -148,6 +190,8 @@ public class MockModuleTest
         endpointMockerBehavior();
 
         module().outboundEndpoint(ADDRESS, PAYLOAD,
+                                  null,
+                                  null,
                                   props(entry(INVOCATION_KEY, INVOCATION_VALUE)),
                                   props(entry(INBOUND_KEY, INBOUND_VALUE)),
                                   props(entry(SESSION_KEY, SESSION_VALUE)),
@@ -157,6 +201,42 @@ public class MockModuleTest
         verify(endpointMocker, times(1)).whenEndpointWithAddress(ADDRESS);
         verify(endpointMocker, times(1)).withIncomingMessageSatisfying((List<SpyProcess>) notNull());
         verify(endpointMocker, times(1)).thenReturn((MuleMessage) notNull());
+    }
+
+    @Test
+    public void endpointThatThrowsException()
+    {
+        endpointMockerBehavior();
+
+        module().outboundEndpoint(ADDRESS, PAYLOAD,
+                                  new DefaultMuleException("exception"), null,
+                                  props(entry(INVOCATION_KEY, INVOCATION_VALUE)),
+                                  props(entry(INBOUND_KEY, INBOUND_VALUE)),
+                                  props(entry(SESSION_KEY, SESSION_VALUE)),
+                                  props(entry(OUTBOUND_KEY, OUTBOUND_VALUE)),
+                                  createAssertions());
+
+        verify(endpointMocker, times(1)).whenEndpointWithAddress(ADDRESS);
+        verify(endpointMocker, times(1)).withIncomingMessageSatisfying((List<SpyProcess>) notNull());
+        verify(endpointMocker, times(1)).thenThrow((MuleException) notNull());
+    }
+
+    @Test
+    public void endpointWithTransformer()
+    {
+        endpointMockerBehavior();
+
+        module().outboundEndpoint(ADDRESS, PAYLOAD,
+                                  new DefaultMuleException("exception"), muleTransformer,
+                                  props(entry(INVOCATION_KEY, INVOCATION_VALUE)),
+                                  props(entry(INBOUND_KEY, INBOUND_VALUE)),
+                                  props(entry(SESSION_KEY, SESSION_VALUE)),
+                                  props(entry(OUTBOUND_KEY, OUTBOUND_VALUE)),
+                                  createAssertions());
+
+        verify(endpointMocker, times(1)).whenEndpointWithAddress(ADDRESS);
+        verify(endpointMocker, times(1)).withIncomingMessageSatisfying((List<SpyProcess>) notNull());
+        verify(endpointMocker, times(1)).thenApply((MuleMessageTransformer) notNull());
     }
 
     @Test

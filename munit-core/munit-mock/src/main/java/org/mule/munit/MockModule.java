@@ -9,25 +9,36 @@
  */
 package org.mule.munit;
 
-import org.apache.commons.lang.StringUtils;
-
+import static org.mule.modules.interceptor.processors.MessageProcessorId.getName;
+import static org.mule.modules.interceptor.processors.MessageProcessorId.getNamespace;
+import static org.mule.munit.common.MunitCore.buildMuleStackTrace;
 import org.mule.DefaultMuleMessage;
-import org.mule.api.*;
+import org.mule.api.DefaultMuleException;
+import org.mule.api.MuleContext;
+import org.mule.api.MuleEvent;
+import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.NestedProcessor;
 import org.mule.api.annotations.Module;
 import org.mule.api.annotations.Processor;
 import org.mule.api.annotations.param.Optional;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.processor.MessageProcessor;
-import org.mule.munit.common.mocking.*;
+import org.mule.munit.common.mocking.EndpointMocker;
+import org.mule.munit.common.mocking.MessageProcessorMocker;
+import org.mule.munit.common.mocking.MunitMuleMessageTransformer;
+import org.mule.munit.common.mocking.MunitSpy;
+import org.mule.munit.common.mocking.MunitVerifier;
+import org.mule.munit.common.mocking.NotDefinedPayload;
+import org.mule.munit.common.mocking.SpyProcess;
+import org.mule.transformer.AbstractMessageTransformer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.mule.modules.interceptor.processors.MessageProcessorId.getName;
-import static org.mule.modules.interceptor.processors.MessageProcessorId.getNamespace;
-import static org.mule.munit.common.MunitCore.buildMuleStackTrace;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * <p>
@@ -55,26 +66,37 @@ public class MockModule implements MuleContextAware
      * <p/>
      * {@sample.xml ../../../doc/mock-connector.xml.sample mock:expect}
      *
-     * @param messageProcessor Message processor name.
-     * @param thenReturn       Expected return value.
-     * @param withAttributes   Message processor parameters.
+     * @param messageProcessor     Message processor name.
+     * @param thenReturn           Expected return value.
+     * @param withAttributes       Message processor parameters.
+     * @param thenApplyTransformer Custom transformer to apply to the message
      */
     @Processor
     public void when(String messageProcessor,
                      @Optional List<Attribute> withAttributes,
-                     @Optional MunitMuleMessage thenReturn)
+                     @Optional MunitMuleMessage thenReturn,
+                     @Optional final Object thenApplyTransformer)
     {
-        MunitMuleMessage munitMuleMessage = thenReturn == null ? new MunitMuleMessage() : thenReturn;
+        if (thenApplyTransformer != null && thenApplyTransformer instanceof AbstractMessageTransformer)
+        {
+            mocker().when(getName(messageProcessor))
+                    .ofNamespace(getNamespace(messageProcessor))
+                    .withAttributes(createAttributes(withAttributes))
+                    .thenApply(new MunitMuleMessageTransformer((AbstractMessageTransformer) thenApplyTransformer));
+        }
+        else
+        {
+            MunitMuleMessage munitMuleMessage = thenReturn == null ? new MunitMuleMessage() : thenReturn;
 
-        mocker().when(getName(messageProcessor))
-                .ofNamespace(getNamespace(messageProcessor))
-                .withAttributes(createAttributes(withAttributes))
-                .thenReturn(createMuleMessageFrom(munitMuleMessage.getPayload(),
-                                                  munitMuleMessage.getInboundProperties(),
-                                                  munitMuleMessage.getOutboundProperties(),
-                                                  munitMuleMessage.getSessionProperties(),
-                                                  munitMuleMessage.getInvocationProperties()));
-
+            mocker().when(getName(messageProcessor))
+                    .ofNamespace(getNamespace(messageProcessor))
+                    .withAttributes(createAttributes(withAttributes))
+                    .thenReturn(createMuleMessageFrom(munitMuleMessage.getPayload(),
+                                                      munitMuleMessage.getInboundProperties(),
+                                                      munitMuleMessage.getOutboundProperties(),
+                                                      munitMuleMessage.getSessionProperties(),
+                                                      munitMuleMessage.getInvocationProperties()));
+        }
     }
 
     /**
@@ -88,7 +110,7 @@ public class MockModule implements MuleContextAware
      * {@sample.xml ../../../doc/mock-connector.xml.sample mock:spy}
      *
      * @param messageProcessor     Message processor name.
-     * @param withAttributes Sets of attributes to narrow-down a specific message processor
+     * @param withAttributes       Sets of attributes to narrow-down a specific message processor
      * @param assertionsBeforeCall Expected return value.
      * @param assertionsAfterCall  Message processor parameters.
      */
@@ -181,14 +203,15 @@ public class MockModule implements MuleContextAware
     }
 
 
-
     /**
      * Reset mock behaviour
      * <p/>
      * {@sample.xml ../../../doc/mock-connector.xml.sample mock:outboundEndpoint}
      *
      * @param address                    the address
+     * @param exception                  in case it fails
      * @param returnPayload              the Return Payload
+     * @param thenApplyTransformer       custom transformer to be applied to the message
      * @param returnInboundProperties    inbound properties
      * @param returnInvocationProperties invocation properties
      * @param returnSessionProperties    invocation session properties
@@ -198,20 +221,41 @@ public class MockModule implements MuleContextAware
     @Processor
     public void outboundEndpoint(String address,
                                  @Optional Object returnPayload,
+                                 @Optional DefaultMuleException exception,
+                                 @Optional Object thenApplyTransformer,
                                  @Optional Map<String, Object> returnInvocationProperties,
                                  @Optional Map<String, Object> returnInboundProperties,
                                  @Optional Map<String, Object> returnSessionProperties,
                                  @Optional Map<String, Object> returnOutboundProperties,
                                  @Optional List<NestedProcessor> assertions)
     {
+        if (thenApplyTransformer != null && thenApplyTransformer instanceof AbstractMessageTransformer)
+        {
+            endpointMocker().whenEndpointWithAddress(address)
+                    .withIncomingMessageSatisfying(createSpyAssertion(createMessageProcessorsFrom(assertions)))
+                    .thenApply(new MunitMuleMessageTransformer((AbstractMessageTransformer) thenApplyTransformer));
+        }
+        else
+        {
 
-        endpointMocker().whenEndpointWithAddress(address)
-                .withIncomingMessageSatisfying(createSpyAssertion(createMessageProcessorsFrom(assertions)))
-                .thenReturn(createMuleMessageFrom(returnPayload,
-                                                  returnInboundProperties,
-                                                  returnOutboundProperties,
-                                                  returnSessionProperties,
-                                                  returnInvocationProperties));
+            if (exception != null)
+            {
+
+                endpointMocker().whenEndpointWithAddress(address)
+                        .withIncomingMessageSatisfying(createSpyAssertion(createMessageProcessorsFrom(assertions)))
+                        .thenThrow(exception);
+            }
+            else
+            {
+                endpointMocker().whenEndpointWithAddress(address)
+                        .withIncomingMessageSatisfying(createSpyAssertion(createMessageProcessorsFrom(assertions)))
+                        .thenReturn(createMuleMessageFrom(returnPayload,
+                                                          returnInboundProperties,
+                                                          returnOutboundProperties,
+                                                          returnSessionProperties,
+                                                          returnInvocationProperties));
+            }
+        }
     }
 
 

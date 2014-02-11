@@ -34,6 +34,7 @@
                 description="
         We want to test that the flow always returns the same payload as we had before calling it.">
 
+        <set-payload value="#[string:fefe]"/>
 
         <munit:set payload-ref="#[string: Hello world!]"/>
 

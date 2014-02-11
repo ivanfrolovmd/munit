@@ -35,6 +35,7 @@
 		]]>
     </script:script>
 
+    <custom-transformer class="org.mule.transformers.AddPropertyTransformer" name="propertyTransformer"/>
 
     <munit:test name="testMockMp" description="
      We are testing here that the Message processor can be mocked with an expected value to return.">
@@ -63,6 +64,21 @@
         <flow-ref name="callingJira"/>
 
         <munit:assert-that payloadIs-ref="#[string: Hello world!]"/>
+
+    </munit:test>
+
+    <munit:test name="testMessageProcessorMockingWithTransformer"
+
+                description="
+        Apply transformer to message processor">
+
+        <mock:when messageProcessor="jira:create-group" thenApplyTransformer-ref="propertyTransformer"/>
+
+        <munit:set payload-ref="#[string: Hello world!]"/>
+
+        <flow-ref name="callingJira"/>
+
+       <munit:assert-on-equals value-ref="#[flowVars['newProperty']]" expected-ref="#[string:propertyValue]"/>
 
     </munit:test>
 
@@ -226,7 +242,7 @@
                 <munit:assert-on-equals expected-ref="#[string:value]" value-ref="#[flowVars['myvar1']]"/>
             </mock:assertions-after-call>
         </mock:spy>
-        
+
         <mock:spy messageProcessor="set-variable">
         	<mock:with-attributes>
         		<mock:with-attribute name="variableName" whereValue-ref="#['myvar2']"/>
@@ -238,9 +254,9 @@
                 <munit:assert-on-equals expected-ref="#[string:valuevalue]" value-ref="#[flowVars['myvar2']]"/>
             </mock:assertions-after-call>
         </mock:spy>
-        
+
         <flow-ref name="duplicateMessageProcessors"/>
-        
+
     </munit:test>
 
     <munit:test name="demo_test"
@@ -264,6 +280,20 @@
         <munit:assert-not-null/>
         <munit:assert-on-equals expected-ref="#[string:someGroup]" value-ref="#[variable:job]"/>
         <munit:assert-that payloadIs-ref="#[string:createGroupResult]"/>
+    </munit:test>
+
+    <munit:test name="mockingEndpointWithTransformer"
+                description="
+        mockingEndpointWithTransformer">
+
+        <mock:outbound-endpoint address="http://localhost:10443/test" thenApplyTransformer-ref="propertyTransformer"/>
+
+        <munit:set payload-ref="#[string: Hello world!]"/>
+
+        <flow-ref name="outboundEndPointFlow"/>
+
+        <munit:assert-on-equals value-ref="#[flowVars['newProperty']]" expected-ref="#[string:propertyValue]"/>
+
     </munit:test>
 
     <munit:test name="testingMockTrowsException" description="Test if a mock can throw an exception"
