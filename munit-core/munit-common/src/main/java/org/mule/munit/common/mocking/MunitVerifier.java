@@ -6,14 +6,14 @@
  */
 package org.mule.munit.common.mocking;
 
+import static junit.framework.Assert.fail;
 import org.mule.api.MuleContext;
 import org.mule.modules.interceptor.processors.MessageProcessorCall;
 import org.mule.modules.interceptor.processors.MessageProcessorId;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static junit.framework.Assert.fail;
 
 /**
  * <p>
@@ -154,6 +154,17 @@ public class MunitVerifier extends MunitMockingTool
     public MunitVerifier withAttributes(Map<String, Object> attributes)
     {
         this.messageProcessorAttributes = attributes;
+        return this;
+    }
+
+    public MunitVerifier withAttributes(Attribute ... attributes)
+    {
+        Map<String, Object> mapOfAttributes = new HashMap<String, Object>();
+        for ( Attribute attribute : attributes )
+        {
+            mapOfAttributes.put(attribute.getId(), attribute.getValue());
+        }
+        this.withAttributes(mapOfAttributes);
         return this;
     }
 

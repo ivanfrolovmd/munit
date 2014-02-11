@@ -6,10 +6,9 @@
  */
 package org.mule.munit.common.mocking;
 
-import junit.framework.AssertionFailedError;
-import org.junit.Before;
-import org.junit.Test;
-
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import org.mule.api.MuleContext;
 import org.mule.api.registry.MuleRegistry;
 import org.mule.modules.interceptor.processors.MessageProcessorCall;
@@ -19,9 +18,9 @@ import org.mule.munit.common.mp.MockedMessageProcessorManager;
 import java.util.ArrayList;
 import java.util.Map;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import junit.framework.AssertionFailedError;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Mulesoft Inc.
@@ -148,6 +147,20 @@ public class MunitVerifierTest
 
         new MunitVerifier(muleContext).verifyCallOfMessageProcessor("testName")
                 .ofNamespace("testNamespace")
+                .atMost(4);
+
+    }
+
+    @Test
+    public void verifyWithAttributes()
+    {
+
+        when(manager.findCallsFor(any(MessageProcessorId.class), any(Map.class)))
+                .thenReturn(createCalls());
+
+        new MunitVerifier(muleContext).verifyCallOfMessageProcessor("testName")
+                .ofNamespace("testNamespace")
+                .withAttributes(Attribute.attribute("test").withValue("anything"))
                 .atMost(4);
 
     }

@@ -102,6 +102,14 @@
         <jira:create-group groupName="someGroupName" userName="someUserName" doc:name="jiraMp"/>
     </flow>
 
+
+    <flow name="untilSuccessfulFlow">
+        <until-successful objectStore-ref="_defaultInMemoryObjectStore" maxRetries="2">
+            <flow-ref name="callingJira"/>
+        </until-successful>
+    </flow>
+
+
     <flow name="FinishDataLoadJobsFlow" doc:name="FinishDataLoadJobsFlow">
         <poll frequency="1000" doc:name="Poll">
             <processor-chain doc:name="Processor Chain">

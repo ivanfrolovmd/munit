@@ -9,6 +9,7 @@ package org.mule.java;
 import static junit.framework.Assert.assertEquals;
 import static org.mule.modules.interceptor.matchers.Matchers.contains;
 import static org.mule.munit.common.mocking.Attribute.attribute;
+import org.mule.api.MuleEvent;
 import org.mule.munit.runner.functional.FunctionalMunitSuite;
 
 import java.io.File;
@@ -36,6 +37,7 @@ public class JavaMunitTest extends FunctionalMunitSuite
 
         Object payload = runFlow("callingJira", testEvent("something")).getMessage().getPayload();
 
+        Thread.sleep(3000);
         assertEquals("expected", payload);
     }
 
@@ -55,12 +57,27 @@ public class JavaMunitTest extends FunctionalMunitSuite
         HashMap<String, Object> attributes = new HashMap<String, Object>();
         attributes.put("name", "callingJira");
         whenMessageProcessor("flow")
-                .withAttributes(attribute("name").withValue("callingJira"))
+                .withAttributes(attribute("name").withValue(contains("callingJira")))
                 .thenReturn(muleMessageWithPayload("hello world"));
 
         assertEquals(runFlow("callingFlow", testEvent("something")).getMessage().getPayload(), "hello world");
     }
 
+
+    @Test
+    public void testUntilSuccessful() throws Exception
+    {
+        whenMessageProcessor("flow")
+                .withAttributes(attribute("name").withValue("callingJira"))
+                .thenReturn(muleMessageWithPayload("hello world"));
+
+
+        MuleEvent muleEvent = runFlow("untilSuccessfulFlow", testEvent("something"));
+
+        Thread.sleep(3000l);
+        assertEquals("something", muleEvent.getMessage().getPayload() );
+        verifyCallOfMessageProcessor("flow").withAttributes(attribute("name").withValue("callingJira")).atLeastOnce();
+    }
 
     @Test
     public void testSetMuleAppHome() throws Exception
