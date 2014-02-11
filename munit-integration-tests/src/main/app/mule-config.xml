@@ -52,6 +52,10 @@
                         class="org.mule.transport.http.transformers.HttpRequestBodyToParamMap"/>
 
 
+    <sub-flow name="setValueFlow"  >
+        <set-variable variableName="areCredentialsValid" value="#[uiUsername.equals(requestUsername)? Boolean.TRUE : Boolean.FALSE]" doc:name="areCredentialsValid"/>
+    </sub-flow>
+
     <sub-flow name="enrichMessageFlow">
         <enricher>
             <processor-chain>

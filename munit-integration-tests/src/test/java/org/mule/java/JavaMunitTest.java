@@ -75,8 +75,20 @@ public class JavaMunitTest extends FunctionalMunitSuite
         MuleEvent muleEvent = runFlow("untilSuccessfulFlow", testEvent("something"));
 
         Thread.sleep(3000l);
-        assertEquals("something", muleEvent.getMessage().getPayload() );
+        assertEquals("something", muleEvent.getMessage().getPayload());
         verifyCallOfMessageProcessor("flow").withAttributes(attribute("name").withValue("callingJira")).atLeastOnce();
+    }
+
+    @Test
+    public void executeSubSFlowWithSetValue() throws Exception{
+
+        MuleEvent event = testEvent("");
+        event.setFlowVariable("uiUsername", "testPass");
+        event.setFlowVariable("requestUsername", "testPass");
+
+        MuleEvent resultEvent = runFlow("setValueFlow", event);
+
+        assertEquals(true, resultEvent.getMessage().getInvocationProperty("areCredentialsValid"));
     }
 
     @Test
