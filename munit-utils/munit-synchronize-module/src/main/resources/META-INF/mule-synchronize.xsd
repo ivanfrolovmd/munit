@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:mule="http://www.mulesoft.org/schema/mule/core" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified" attributeFormDefault="unqualified"
+           targetNamespace="http://www.mulesoft.org/schema/mule/synchronize">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace"></xs:import>
+    <xs:import schemaLocation="http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+               namespace="http://www.springframework.org/schema/beans"></xs:import>
+    <xs:import schemaLocation="http://www.mulesoft.org/schema/mule/core/current/mule.xsd"
+               namespace="http://www.mulesoft.org/schema/mule/core"></xs:import>
+
+    <xs:element xmlns="http://www.mulesoft.org/schema/mule/synchronize"
+                xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="run-and-wait"
+                substitutionGroup="mule:abstract-message-processor" type="RunAndWaitType">
+        <xs:annotation>
+            <xs:documentation>Custom processor
+                &lt;p/&gt;</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:complexType name="RunAndWaitType">
+        <xs:complexContent>
+            <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core"
+                          base="mule:abstractMessageProcessorType">
+                <xs:group ref="mule:messageProcessorOrOutboundEndpoint" maxOccurs="unbounded" minOccurs="0"></xs:group>
+
+                <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/synchronize" name="runAsyc" default="false"
+                              use="optional" type="mule:substitutableBoolean">
+                    <xs:annotation>
+                        <xs:documentation>runasyc</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/synchronize" name="timeout" default="2000"
+                              use="optional" type="mule:substitutableLong">
+                    <xs:annotation>
+                        <xs:documentation>timeout</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:schema>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:spring="http://www.springframework.org/schema/beans"
+      xmlns:synchronize="http://www.mulesoft.org/schema/mule/synchronize"
+      xsi:schemaLocation="
+        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+        http://www.mulesoft.org/schema/mule/synchronize http://www.mulesoft.org/schema/mule/synchronize/3.4.0/mule-synchronize.xsd">
+
+
+
+    <flow name="testFlow">
+        <synchronize:run-and-wait timeout="16000">
+            <flow-ref name="runAsyncs"/>
+        </synchronize:run-and-wait>
+
+    </flow>
+
+    <flow name="testAsyncFlow">
+        <synchronize:run-and-wait runAsyc="true" timeout="16000">
+           <flow-ref name="asyncFlow"/>
+        </synchronize:run-and-wait>
+
+        <custom-processor class="org.mule.EndedMessageProcessor"/>
+    </flow>
+
+
+    <flow name="runAsyncs">
+        <async>
+            <expression-component>
+                Thread.sleep(3000);
+            </expression-component>
+        </async>
+        <async>
+            <expression-component>
+                Thread.sleep(5000);
+            </expression-component>
+        </async>
+    </flow>
+
+
+    <flow name="asyncFlow" processingStrategy="asynchronous">
+        <expression-component>
+            Thread.sleep(4000);
+        </expression-component>
+    </flow>
+
+
+    <flow name="apiAsyncFlow" processingStrategy="asynchronous">
+        <expression-component>
+            Thread.sleep(4000);
+        </expression-component>
+
+        <custom-processor class="org.mule.EndedMessageProcessor"/>
+
+    </flow>
+
+</mule>

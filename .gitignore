@@ -34,6 +34,8 @@ munit-utils/munit-dbserver-module/target
 munit-utils/munit-ftpserver-module/.settings
 munit-utils/munit-ftpserver-module/.idea
 munit-utils/munit-ftpserver-module/target
+munit-utils/munit-synchronize-module/target
+munit-utils/munit-synchronize-module/.idea
 munit-utils/munit-utils-update-site/target
 munit-utils/munit-utils-update-site/.idea
 munit-utils/common
