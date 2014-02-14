@@ -3,6 +3,7 @@
 *.iws
 *.ipr
 .clover
+.DSStore
 /target
 .project
 .classpath
