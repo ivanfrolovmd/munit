@@ -22,8 +22,6 @@ import java.util.Map;
  * <p>Module used to call mule transports.</p>
  *
  * @author Mulesoft Inc.
- * @author Casal, Javier
- * @author Scandroglio, Matias
  */
 @Module(name = "mclient", schemaVersion = "1.0", minMuleVersion = "3.4.0", friendlyName = "Mule Client")
 @Category(name = "org.mule.tooling.category.munit.utils", description = "Munit tools")

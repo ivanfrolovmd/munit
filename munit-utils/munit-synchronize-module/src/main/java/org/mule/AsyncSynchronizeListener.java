@@ -14,6 +14,14 @@ import org.mule.context.notification.AsyncMessageNotification;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * <p>
+ * Listener for the Mule Async notifications
+ * </p>
+ *
+ * @author Mulesoft Inc.
+ * @since 3.4
+ */
 public class AsyncSynchronizeListener implements AsyncMessageNotificationListener<AsyncMessageNotification>, Synchronize
 {
 
@@ -29,8 +37,8 @@ public class AsyncSynchronizeListener implements AsyncMessageNotificationListene
     public void onNotification(AsyncMessageNotification notification)
     {
         String notificationRootId = ((MuleEvent) notification.getSource()).getMessage().getMessageRootId();
-        
-        
+
+
         if (notificationRootId.equals(messageRootId))
         {
             if (notification.getAction() == AsyncMessageNotification.PROCESS_ASYNC_SCHEDULED)

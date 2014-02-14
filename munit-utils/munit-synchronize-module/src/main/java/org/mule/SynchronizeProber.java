@@ -12,10 +12,16 @@ import org.mule.tck.probe.Prober;
 import org.mule.tck.probe.Timeout;
 
 /**
+ * <p>
+ * Implementation of the mule prober that loops until the Syncronize says it is ready to continue
+ * </p>
  *
+ * @author Mulesoft Inc.
+ * @since 3.4
  */
-public class SynchronizeProber  implements Prober
+public class SynchronizeProber implements Prober
 {
+
     public static final long DEFAULT_TIMEOUT = 1000;
     public static final long DEFAULT_POLLING_INTERVAL = 100;
 

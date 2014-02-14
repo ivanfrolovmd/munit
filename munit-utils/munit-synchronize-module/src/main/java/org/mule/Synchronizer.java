@@ -13,7 +13,11 @@ import org.mule.tck.probe.PollingProber;
 import org.mule.tck.probe.Probe;
 
 /**
- *
+ * <p>
+ * Util class for munit to wait for process to complete
+ * </p>
+ * @author Mulesoft Inc.
+ * @since 3.4
  */
 public abstract class Synchronizer
 {

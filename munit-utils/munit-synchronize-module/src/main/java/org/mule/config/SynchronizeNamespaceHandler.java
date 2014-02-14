@@ -10,7 +10,8 @@ import org.mule.config.spring.handlers.AbstractMuleNamespaceHandler;
 import org.mule.config.spring.parsers.generic.ChildDefinitionParser;
 
 /**
- *
+ * @author Mulesoft Inc.
+ * @since 3.4
  */
 public class SynchronizeNamespaceHandler extends AbstractMuleNamespaceHandler
 {

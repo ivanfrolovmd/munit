@@ -15,10 +15,16 @@ import org.mule.api.MuleException;
 import org.mule.api.processor.MessageProcessor;
 
 /**
+ * <p>
+ * The only processor for the Synchronizer
+ * </p>
  *
+ * @author Mulesoft Inc.
+ * @since 3.4
  */
 public class RunAndWait implements MessageProcessor
 {
+
     private MessageProcessor messageProcessor;
     private boolean runAsyc;
     private long timeout;
@@ -26,8 +32,8 @@ public class RunAndWait implements MessageProcessor
     @Override
     public MuleEvent process(MuleEvent event) throws MuleException
     {
-        MuleEvent processingEvent= event;
-        if ( runAsyc )
+        MuleEvent processingEvent = event;
+        if (runAsyc)
         {
             processingEvent = new DefaultMuleEvent(event.getMessage(), MessageExchangePattern.ONE_WAY,
                                                    event.getFlowConstruct(), event.getSession());

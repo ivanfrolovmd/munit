@@ -12,6 +12,14 @@ import org.mule.context.notification.PipelineMessageNotification;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * <p>
+ * Listener for the pipeline Notifications
+ * </p>
+ *
+ * @author Mulesoft Inc.
+ * @since 3.4
+ */
 public class PipelineSynchronizeListener implements PipelineMessageNotificationListener<PipelineMessageNotification>, Synchronize
 {
 
