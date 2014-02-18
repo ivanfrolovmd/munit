@@ -5,7 +5,7 @@
     <parent>
         <artifactId>munit</artifactId>
         <groupId>org.mule</groupId>
-        <version>3.4-M5-SNAPSHOT</version>
+        <version>3.4-M6-SNAPSHOT</version>
     </parent>
     <groupId>org.mule.munit.examples</groupId>
     <artifactId>munit-examples</artifactId>

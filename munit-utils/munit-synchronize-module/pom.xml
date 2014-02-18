@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mule.modules</groupId>
     <artifactId>munit-synchronize-module</artifactId>
-    <version>3.4-M5-SNAPSHOT</version>
+    <version>3.4-M6-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Mule Synchronize connector</name>
 

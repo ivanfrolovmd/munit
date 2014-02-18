@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.mule.munit.utils</groupId>
         <artifactId>munit-utils</artifactId>
-        <version>3.4-M5-SNAPSHOT</version>
+        <version>3.4-M6-SNAPSHOT</version>
     </parent>
     <artifactId>munit-mailserver-module</artifactId>
     <packaging>mule-module</packaging>

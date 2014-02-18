@@ -5,7 +5,7 @@
 
     <groupId>org.mule</groupId>
     <artifactId>munit</artifactId>
-    <version>3.4-M5-SNAPSHOT</version>
+    <version>3.4-M6-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>The Munit Project</name>
@@ -13,7 +13,7 @@
     <properties>
         <mule.version>3.4.2</mule.version>
         <mule.devkit.version>3.4.2</mule.devkit.version>
-        <interceptor.api.version>3.4-M5-SNAPSHOT</interceptor.api.version>
+        <interceptor.api.version>3.4-M6-SNAPSHOT</interceptor.api.version>
         <junit.version>4.8.2</junit.version>
         <mockito.version>1.8.2</mockito.version>
         <eclipsePluginVersion>2.5</eclipsePluginVersion>

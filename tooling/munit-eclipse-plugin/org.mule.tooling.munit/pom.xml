@@ -32,7 +32,7 @@
                                 <artifactItem>
                                     <groupId>org.mule.munit</groupId>
                                     <artifactId>runner</artifactId>
-                                    <version>3.4-M5-SNAPSHOT</version>
+                                    <version>3.4-M6-SNAPSHOT</version>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
