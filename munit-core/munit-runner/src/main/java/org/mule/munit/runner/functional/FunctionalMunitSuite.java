@@ -6,6 +6,9 @@
  */
 package org.mule.munit.runner.functional;
 
+import static org.mule.modules.interceptor.matchers.Matchers.contains;
+import static org.mule.munit.common.mocking.Attribute.attribute;
+
 import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
 import org.mule.MessageExchangePattern;
@@ -238,9 +241,25 @@ public abstract class FunctionalMunitSuite
         return new MessageProcessorMocker(muleContext).when(name);
     }
 
+    protected MessageProcessorMocker whenFlow(String name) {
+        return whenMessageProcessor("flow").withAttributes(attribute("name").withValue(name));
+    }
+
+    protected MessageProcessorMocker whenSubFlow(String name) {
+        return whenMessageProcessor("sub-flow").withAttributes(attribute("name").withValue(contains(name)));
+    }
+
     protected final MunitVerifier verifyCallOfMessageProcessor(String name)
     {
         return new MunitVerifier(muleContext).verifyCallOfMessageProcessor(name);
+    }
+
+    protected MunitVerifier verifyCallOfFlow(String name) {
+        return verifyCallOfMessageProcessor("flow").withAttributes(attribute("name").withValue(contains(name)));
+    }
+
+    protected MunitVerifier verifyCallOfSubFlow(String name) {
+        return verifyCallOfMessageProcessor("sub-flow").withAttributes(attribute("name").withValue(contains(name)));
     }
 
     protected final MunitSpy spyMessageProcessor(String name)
