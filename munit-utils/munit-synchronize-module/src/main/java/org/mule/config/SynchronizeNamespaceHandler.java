@@ -6,6 +6,7 @@
  */
 package org.mule.config;
 
+import org.mule.SynchronizedMessageProcessor;
 import org.mule.config.spring.handlers.AbstractMuleNamespaceHandler;
 import org.mule.config.spring.parsers.generic.ChildDefinitionParser;
 
@@ -19,5 +20,6 @@ public class SynchronizeNamespaceHandler extends AbstractMuleNamespaceHandler
     public void init()
     {
         registerBeanDefinitionParser("run-and-wait", new ChildDefinitionParser("messageProcessor", RunAndWait.class));
+        registerBeanDefinitionParser("wait-for", new ChildDefinitionParser("synchronizedMessageProcessors", SynchronizedMessageProcessor.class));
     }
 }

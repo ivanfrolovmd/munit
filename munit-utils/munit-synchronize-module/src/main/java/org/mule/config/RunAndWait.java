@@ -8,11 +8,15 @@ package org.mule.config;
 
 import org.mule.DefaultMuleEvent;
 import org.mule.MessageExchangePattern;
+import org.mule.SynchronizedMessageProcessor;
 import org.mule.Synchronizer;
 import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.processor.MessageProcessor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -25,7 +29,8 @@ import org.mule.api.processor.MessageProcessor;
 public class RunAndWait implements MessageProcessor
 {
 
-    private MessageProcessor messageProcessor;
+    private List<MessageProcessor> messageProcessors;
+    private List<SynchronizedMessageProcessor> synchronizedMessageProcessors = new ArrayList<SynchronizedMessageProcessor>();
     private boolean runAsyc;
     private long timeout;
 
@@ -39,13 +44,16 @@ public class RunAndWait implements MessageProcessor
                                                    event.getFlowConstruct(), event.getSession());
         }
 
-        Synchronizer synchronizer = new Synchronizer(event.getMuleContext(), timeout)
+        Synchronizer synchronizer = new Synchronizer(event.getMuleContext(), timeout, synchronizedMessageProcessors)
         {
 
             @Override
             protected MuleEvent process(MuleEvent event) throws Exception
             {
-                return messageProcessor.process(event);
+                for ( MessageProcessor messageProcessor : messageProcessors){
+                    event = messageProcessor.process(event);
+                }
+                return event;
             }
         };
 
@@ -59,9 +67,9 @@ public class RunAndWait implements MessageProcessor
         }
     }
 
-    public void setMessageProcessor(MessageProcessor messageProcessor)
+    public void setMessageProcessors(List<MessageProcessor> messageProcessor)
     {
-        this.messageProcessor = messageProcessor;
+        this.messageProcessors = messageProcessor;
     }
 
     public void setRunAsyc(boolean runAsyc)
@@ -72,5 +80,10 @@ public class RunAndWait implements MessageProcessor
     public void setTimeout(long timeout)
     {
         this.timeout = timeout;
+    }
+
+    public void setSynchronizedMessageProcessors(List<SynchronizedMessageProcessor> synchronizedMessageProcessors)
+    {
+        this.synchronizedMessageProcessors = synchronizedMessageProcessors;
     }
 }

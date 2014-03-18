@@ -8,7 +8,6 @@
 package org.mule;
 
 
-import org.mule.api.MuleEvent;
 import org.mule.api.context.notification.AsyncMessageNotificationListener;
 import org.mule.context.notification.AsyncMessageNotification;
 
@@ -26,29 +25,17 @@ public class AsyncSynchronizeListener implements AsyncMessageNotificationListene
 {
 
     AtomicInteger asyncCount = new AtomicInteger(0);
-    private String messageRootId;
-
-    public AsyncSynchronizeListener(String messageRootId)
-    {
-        this.messageRootId = messageRootId;
-    }
 
     @Override
     public void onNotification(AsyncMessageNotification notification)
     {
-        String notificationRootId = ((MuleEvent) notification.getSource()).getMessage().getMessageRootId();
-
-
-        if (notificationRootId.equals(messageRootId))
+        if (notification.getAction() == AsyncMessageNotification.PROCESS_ASYNC_SCHEDULED)
         {
-            if (notification.getAction() == AsyncMessageNotification.PROCESS_ASYNC_SCHEDULED)
-            {
-                asyncCount.incrementAndGet();
-            }
-            else
-            {
-                asyncCount.decrementAndGet();
-            }
+            asyncCount.incrementAndGet();
+        }
+        else
+        {
+            asyncCount.decrementAndGet();
         }
     }
 

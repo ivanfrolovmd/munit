@@ -411,6 +411,13 @@
         </dependency>
 
         <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>munit-synchronize-module</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.mule.munit.utils</groupId>
             <artifactId>munit-mailserver-module</artifactId>
             <version>${project.version}</version>

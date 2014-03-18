@@ -12,6 +12,9 @@ import org.mule.api.MuleEvent;
 import org.mule.tck.probe.PollingProber;
 import org.mule.tck.probe.Probe;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <p>
  * Util class for munit to wait for process to complete
@@ -24,17 +27,23 @@ public abstract class Synchronizer
 
     private MuleContext muleContext;
     private long timeout;
+    private List<SynchronizedMessageProcessor> messageProcessors;
 
-    public Synchronizer(MuleContext muleContext, long timeout)
+    public Synchronizer(MuleContext muleContext, long timeout){
+        this(muleContext, timeout, new ArrayList<SynchronizedMessageProcessor>());
+    }
+
+    public Synchronizer(MuleContext muleContext, long timeout,List<SynchronizedMessageProcessor> messageProcessors)
     {
         this.muleContext = muleContext;
         this.timeout = timeout;
+        this.messageProcessors = messageProcessors;
     }
 
     public MuleEvent runAndWait(MuleEvent event) throws Exception
     {
-        final AsyncSynchronizeListener asyncListener = new AsyncSynchronizeListener(event.getMessage().getMessageRootId());
-        final PipelineSynchronizeListener pipelineListener = new PipelineSynchronizeListener(event.getMessage().getMessageRootId());
+        final AsyncSynchronizeListener asyncListener = new AsyncSynchronizeListener();
+        final PipelineSynchronizeListener pipelineListener = new PipelineSynchronizeListener(muleContext, messageProcessors);
         muleContext.registerListener(asyncListener);
         muleContext.registerListener(pipelineListener);
 

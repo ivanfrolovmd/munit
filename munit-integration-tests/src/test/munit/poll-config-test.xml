@@ -4,15 +4,18 @@
       xmlns:script="http://www.mulesoft.org/schema/mule/scripting"
       xmlns:mock="http://www.mulesoft.org/schema/mule/mock"
       xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+      xmlns:mclient="http://www.mulesoft.org/schema/mule/mclient"
+      xmlns:synchronize="http://www.mulesoft.org/schema/mule/synchronize"
       xsi:schemaLocation="
             http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
             http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
             http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
             http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd
-            http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/mock/current/mule-mock.xsd">
+            http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/mock/current/mule-mock.xsd
+            http://www.mulesoft.org/schema/mule/mclient http://www.mulesoft.org/schema/mule/mclient/current/mule-mclient.xsd
+             http://www.mulesoft.org/schema/mule/synchronize http://www.mulesoft.org/schema/mule/synchronize/current/mule-synchronize.xsd">
 
-    <munit:config/>
-    <mock:config/>
+    <munit:config mock-connectors="false" mock-inbounds="false"/>
 
     <spring:beans>
         <spring:import resource="poll-config.xml"/>
@@ -44,5 +47,22 @@
 
     </munit:test>
 
+
+    <munit:test name="waitForMessageProcessors"
+                description="If Jira Does not fail then we log the message Everything OK">
+
+
+        <mock:when messageProcessor="jira:create-issue">
+            <mock:then-return payload-ref="#[string:OK]"/>
+        </mock:when>
+
+        <synchronize:run-and-wait timeout="4000" runAsyc="true">
+            <synchronize:wait-for message-processor="jira:create-issue" times="1"/>
+            <flow-ref name="jira-mock-exampleFlow2"/>
+        </synchronize:run-and-wait>
+
+        <mock:verify-call messageProcessor="jira:create-issue"/>
+
+    </munit:test>
 
 </mule>

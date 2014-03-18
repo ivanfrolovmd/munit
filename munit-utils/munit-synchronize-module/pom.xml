@@ -29,7 +29,11 @@
             <version>${mule.version}</version>
         </dependency>
 
-
+        <dependency>
+            <artifactId>munit-common</artifactId>
+            <groupId>org.mule.munit</groupId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

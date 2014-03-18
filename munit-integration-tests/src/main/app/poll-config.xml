@@ -34,4 +34,14 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
             </choice>
         </foreach>
     </flow>
+
+    <flow name="jira-mock-exampleFlow2" doc:name="jira-mock-exampleFlow">
+        <poll frequency="1000" doc:name="Poll">
+            <logger message="JIRA FAILED" level="ERROR" doc:name="Logger"/>
+        </poll>
+        <async>
+            <jira:create-issue config-ref="Jira" doc:name="Jira" project="test-project" summary="#[payload]"
+                               type="bug"/>
+        </async>
+    </flow>
 </mule>

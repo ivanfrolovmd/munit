@@ -247,10 +247,11 @@ public class MunitMessageProcessorInterceptorTest
         Method method = MessageProcessor.class.getMethod("process", MuleEvent.class);
         MockMunitMessageProcessorInterceptor interceptor = interceptor();
         interceptor.setMockProcess(true);
-        Object intercept = interceptor.intercept(OBJECT, method, null, proxy);
+        SpyMessageProcessor mp = new SpyMessageProcessor();
+        Object intercept = interceptor.intercept(mp, method, null, proxy);
 
-        verify(proxy, never()).invokeSuper(OBJECT, null);
-        assertEquals(OBJECT, intercept);
+        verify(proxy, never()).invokeSuper(mp, null);
+        assertEquals(mp, intercept);
     }
 
     private SpyAssertion spyAssertion(List<MessageProcessor> mp)
