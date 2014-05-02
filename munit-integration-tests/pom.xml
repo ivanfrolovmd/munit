@@ -14,7 +14,7 @@
 	<description>Integration Test for Munit Project</description>
 
 	<properties>
-		<mule.version>3.4.2</mule.version>
+		<mule.version>3.4.0</mule.version>
         <mule.morphia.version>1.0-SNAPSHOT</mule.morphia.version>
         <mule.loggly.version>1.0</mule.loggly.version>
 		<eclipsePluginVersion>3.3.0</eclipsePluginVersion>

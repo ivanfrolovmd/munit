@@ -10,8 +10,8 @@
     <name>Module for Mocking</name>
 
     <properties>
-        <mule.version>3.4.2</mule.version>
-        <mule.devkit.version>3.4.2</mule.devkit.version>
+        <mule.version>3.4.0</mule.version>
+        <mule.devkit.version>3.4.0</mule.devkit.version>
         <junit.version>4.9</junit.version>
         <mockito.version>1.8.2</mockito.version>
         <skip.javadoc>true</skip.javadoc>

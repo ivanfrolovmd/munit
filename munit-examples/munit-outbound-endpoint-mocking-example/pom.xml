@@ -10,7 +10,7 @@
     <properties>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jdk.version>1.6</jdk.version>
-        <mule.version>3.4.2</mule.version>
+        <mule.version>3.4.0</mule.version>
         <eclipsePluginVersion>2.8</eclipsePluginVersion>
         <jdkName>JavaSE-1.6</jdkName>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
