@@ -4,7 +4,7 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.munit.runner.mule.context;
+package org.mule.munit.common;
 
 import static org.mule.modules.interceptor.connectors.ConnectorMethodInterceptorFactory.addFactoryDefinitionTo;
 import org.mule.api.config.MuleProperties;
@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
@@ -37,7 +38,7 @@ import org.springframework.beans.factory.support.RootBeanDefinition;
  * @author Mulesoft Inc.
  * @since 3.4.0
  */
-public class MunitApplicationContextPostProcessor
+public class MunitApplicationContextPostProcessor implements BeanFactoryPostProcessor
 {
 
     private static Logger logger = Logger.getLogger("Bean definition Processor");

@@ -7,6 +7,8 @@
 package org.mule.munit.common.endpoint;
 
 
+import org.mule.munit.common.MunitApplicationContextPostProcessor;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -25,7 +27,7 @@ import java.util.logging.Logger;
  * @author Mulesoft Inc.
  * @since 3.3.2
  */
-public class MunitSpringFactoryPostProcessor
+public class MunitSpringFactoryPostProcessor extends MunitApplicationContextPostProcessor
 {
 
     private static Logger logger = Logger.getLogger("Bean definition Processor");

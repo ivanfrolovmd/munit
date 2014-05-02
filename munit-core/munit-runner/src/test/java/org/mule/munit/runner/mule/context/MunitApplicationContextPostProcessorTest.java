@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.transport.Connector;
 import org.mule.construct.Flow;
-import org.mule.munit.common.endpoint.MunitSpringFactoryPostProcessor;
+import org.mule.munit.common.MunitApplicationContextPostProcessor;
 
 import java.util.ArrayList;
 
