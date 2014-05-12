@@ -49,109 +49,109 @@ public class MockOutboundEndpoint implements OutboundEndpoint
     @Override
     public List<String> getResponseProperties()
     {
-        return null;
+        return realEndpoint.getResponseProperties();
     }
 
     @Override
     public EndpointURI getEndpointURI()
     {
-        return null;
+        return realEndpoint.getEndpointURI();
     }
 
     @Override
     public String getAddress()
     {
-        return null;
+        return realEndpoint.getAddress();
     }
 
     @Override
     public String getEncoding()
     {
-        return null;
+        return realEndpoint.getEncoding();
     }
 
     @Override
     public Connector getConnector()
     {
-        return null;
+        return realEndpoint.getConnector();
     }
 
     @Override
     public List<Transformer> getTransformers()
     {
-        return null;
+        return realEndpoint.getTransformers();
     }
 
     @Override
     public List<Transformer> getResponseTransformers()
     {
-        return null;
+        return realEndpoint.getResponseTransformers();
     }
 
     @Override
     public Map getProperties()
     {
-        return null;
+        return realEndpoint.getProperties();
     }
 
     @Override
     public Object getProperty(Object key)
     {
-        return null;
+        return realEndpoint.getProperty(key);
     }
 
     @Override
     public String getProtocol()
     {
-        return null;
+        return realEndpoint.getProtocol();
     }
 
     @Override
     public boolean isReadOnly()
     {
-        return false;
+        return realEndpoint.isReadOnly();
     }
 
     @Override
     public TransactionConfig getTransactionConfig()
     {
-        return null;
+        return realEndpoint.getTransactionConfig();
     }
 
     @Override
     public Filter getFilter()
     {
-        return null;
+        return realEndpoint.getFilter();
     }
 
     @Override
     public boolean isDeleteUnacceptedMessages()
     {
-        return false;
+        return realEndpoint.isDeleteUnacceptedMessages();
     }
 
     @Override
     public EndpointSecurityFilter getSecurityFilter()
     {
-        return null;
+        return realEndpoint.getSecurityFilter();
     }
 
     @Override
     public EndpointMessageProcessorChainFactory getMessageProcessorsFactory()
     {
-        return null;
+        return realEndpoint.getMessageProcessorsFactory();
     }
 
     @Override
     public List<MessageProcessor> getMessageProcessors()
     {
-        return null;
+        return realEndpoint.getMessageProcessors();
     }
 
     @Override
     public List<MessageProcessor> getResponseMessageProcessors()
     {
-        return null;
+        return realEndpoint.getResponseMessageProcessors();
     }
 
     @Override
@@ -163,55 +163,55 @@ public class MockOutboundEndpoint implements OutboundEndpoint
     @Override
     public int getResponseTimeout()
     {
-        return 0;
+        return realEndpoint.getResponseTimeout();
     }
 
     @Override
     public String getInitialState()
     {
-        return null;
+        return realEndpoint.getInitialState();
     }
 
     @Override
     public MuleContext getMuleContext()
     {
-        return null;
+        return realEndpoint.getMuleContext();
     }
 
     @Override
     public RetryPolicyTemplate getRetryPolicyTemplate()
     {
-        return null;
+        return realEndpoint.getRetryPolicyTemplate();
     }
 
     @Override
     public String getEndpointBuilderName()
     {
-        return null;
+        return realEndpoint.getEndpointBuilderName();
     }
 
     @Override
     public boolean isProtocolSupported(String protocol)
     {
-        return false;
+        return realEndpoint.isProtocolSupported(protocol);
     }
 
     @Override
     public String getMimeType()
     {
-        return null;
+        return realEndpoint.getMimeType();
     }
 
     @Override
     public AbstractRedeliveryPolicy getRedeliveryPolicy()
     {
-        return null;
+        return realEndpoint.getRedeliveryPolicy();
     }
 
     @Override
     public boolean isDisableTransportTransformer()
     {
-        return false;
+        return realEndpoint.isDisableTransportTransformer();
     }
 
     @Override
@@ -257,6 +257,6 @@ public class MockOutboundEndpoint implements OutboundEndpoint
     @Override
     public String getName()
     {
-        return "Mocked Endpoint";
+        return realEndpoint.getName();
     }
 }

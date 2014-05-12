@@ -6,9 +6,6 @@
  */
 package org.mule.munit.common.endpoint;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
-import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -126,33 +123,58 @@ public class MockOutboundEndpointTest
 
         when(realEndpoint.getExchangePattern()).thenReturn(MessageExchangePattern.REQUEST_RESPONSE);
 
-        assertNull(endpoint.getResponseProperties());
-        assertNull(endpoint.getEndpointURI());
-        assertNull(endpoint.getAddress());
-        assertNull(endpoint.getEncoding());
-        assertNull(endpoint.getConnector());
-        assertNull(endpoint.getTransformers());
-        assertNull(endpoint.getResponseTransformers());
-        assertNull(endpoint.getProperties());
-        assertNull(endpoint.getProperty(null));
-        assertNull(endpoint.getProtocol());
-        assertNull(endpoint.getFilter());
-        assertNull(endpoint.getTransactionConfig());
-        assertNull(endpoint.getSecurityFilter());
-        assertNull(endpoint.getMessageProcessorsFactory());
-        assertNull(endpoint.getMessageProcessors());
-        assertNull(endpoint.getResponseMessageProcessors());
-        assertEquals(MessageExchangePattern.REQUEST_RESPONSE, endpoint.getExchangePattern());
-        assertNull(endpoint.getInitialState());
-        assertNull(endpoint.getMuleContext());
-        assertNull(endpoint.getRetryPolicyTemplate());
-        assertNull(endpoint.getRetryPolicyTemplate());
-        assertNull(endpoint.getMimeType());
-        assertNull(endpoint.getRedeliveryPolicy());
-        assertFalse(endpoint.isReadOnly());
-        assertFalse(endpoint.isDisableTransportTransformer());
-        assertFalse(endpoint.isProtocolSupported(""));
-        assertEquals(0, endpoint.getResponseTimeout());
+        endpoint.getResponseProperties();
+        verify(realEndpoint).getResponseProperties();
+        endpoint.getEndpointURI();
+        verify(realEndpoint).getEndpointURI();
+        endpoint.getAddress();
+        verify(realEndpoint).getAddress();
+        endpoint.getEncoding();
+        verify(realEndpoint).getEncoding();
+        endpoint.getConnector();
+        verify(realEndpoint).getConnector();
+        endpoint.getTransformers();
+        verify(realEndpoint).getTransformers();
+        endpoint.getResponseTransformers();
+        verify(realEndpoint).getResponseTransformers();
+        endpoint.getProperties();
+        verify(realEndpoint).getProperties();
+        endpoint.getProperty(null);
+        verify(realEndpoint).getProperty(null);
+        endpoint.getProtocol();
+        verify(realEndpoint).getProtocol();
+        endpoint.getFilter();
+        verify(realEndpoint).getFilter();
+        endpoint.getTransactionConfig();
+        verify(realEndpoint).getTransactionConfig();
+        endpoint.getSecurityFilter();
+        verify(realEndpoint).getSecurityFilter();
+        endpoint.getMessageProcessorsFactory();
+        verify(realEndpoint).getMessageProcessorsFactory();
+        endpoint.getMessageProcessors();
+        verify(realEndpoint).getMessageProcessors();
+        endpoint.getResponseMessageProcessors();
+        verify(realEndpoint).getResponseMessageProcessors();
+        endpoint.getExchangePattern();
+        verify(realEndpoint).getExchangePattern();
+        endpoint.getInitialState();
+        verify(realEndpoint).getInitialState();
+        endpoint.getMuleContext();
+        verify(realEndpoint).getMuleContext();
+        endpoint.getRetryPolicyTemplate();
+        verify(realEndpoint).getRetryPolicyTemplate();
+        endpoint.getMimeType();
+        verify(realEndpoint).getMimeType();
+        endpoint.getRedeliveryPolicy();
+        verify(realEndpoint).getRedeliveryPolicy();
+        endpoint.isReadOnly();
+        verify(realEndpoint).isReadOnly();
+        endpoint.isDisableTransportTransformer();
+        verify(realEndpoint).isDisableTransportTransformer();
+        endpoint.isProtocolSupported("");
+        verify(realEndpoint).isProtocolSupported("");
+        endpoint.getResponseTimeout();
+        verify(realEndpoint).getResponseTimeout();
     }
 
     private ArrayList<MessageProcessor> buildMessageAssertions()
