@@ -29,7 +29,6 @@
         <module>munit-utils</module>
         <module>munit-maven-tools</module>
         <module>munit-integration-tests</module>
-        <module>munit-examples</module>
 
     </modules>
 
