@@ -13,6 +13,7 @@ import org.mule.api.config.MuleProperties;
 import org.mule.api.context.MuleContextBuilder;
 import org.mule.api.context.notification.MessageProcessorNotificationListener;
 import org.mule.api.lifecycle.InitialisationException;
+import org.mule.config.AnnotationsConfigurationBuilder;
 import org.mule.config.DefaultMuleConfiguration;
 import org.mule.config.builders.SimpleConfigurationBuilder;
 import org.mule.context.DefaultMuleContextBuilder;
@@ -47,7 +48,7 @@ import org.apache.log4j.SimpleLayout;
 public class MuleContextManager
 {
 
-    public static final String CLASSNAME_ANNOTATIONS_CONFIG_BUILDER = "org.mule.org.mule.munit.config.AnnotationsConfigurationBuilder";
+    public static final String CLASSNAME_ANNOTATIONS_CONFIG_BUILDER = AnnotationsConfigurationBuilder.class.getCanonicalName();
 
     private MockingConfiguration configuration;
     private Collection<MunitPlugin> plugins;
