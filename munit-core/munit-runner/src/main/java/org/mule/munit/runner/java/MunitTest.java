@@ -6,23 +6,18 @@
  */
 package org.mule.munit.runner.java;
 
-import static org.mule.munit.common.MunitCore.buildMuleStackTrace;
-import org.mule.DefaultMuleEvent;
-import org.mule.DefaultMuleMessage;
-import org.mule.MessageExchangePattern;
-import org.mule.api.MuleContext;
+import junit.framework.TestCase;
 import org.mule.api.MuleEvent;
-import org.mule.api.MuleException;
 import org.mule.munit.common.MunitCore;
 import org.mule.munit.config.MunitFlow;
 import org.mule.munit.config.MunitTestFlow;
+import org.mule.munit.runner.AbstractMunitTest;
+import org.mule.munit.runner.mule.result.TestResult;
 import org.mule.munit.runner.output.DefaultOutputHandler;
-import org.mule.munit.runner.output.TestOutputHandler;
-import org.mule.tck.MuleTestUtils;
 
 import java.util.List;
 
-import junit.framework.TestCase;
+import static org.mule.munit.common.MunitCore.buildMuleStackTrace;
 
 
 /**
@@ -38,52 +33,14 @@ import junit.framework.TestCase;
  * @author Mulesoft Inc.
  * @since 3.3.2
  */
-public class MunitTest extends TestCase
-{
+public class MunitTest extends AbstractMunitTest {
 
-    /**
-     * The list of flows to be executed before the test
-     */
-    private List<MunitFlow> before;
-
-    /**
-     * The test flow to be executed
-     */
-    private MunitTestFlow flow;
-
-    /**
-     * The list of flows to be executed after the test
-     */
-    private List<MunitFlow> after;
-
-    /**
-     * The mule context, used to access mule configuration/registry
-     */
-    private MuleContext muleContext;
-
-    /**
-     * Hander of the test results. It manages the way the results are shown.
-     */
-    private TestOutputHandler outputHandler = new DefaultOutputHandler();
-
-
-    public MunitTest(List<MunitFlow> before, MunitTestFlow flow, List<MunitFlow> after)
-    {
+    public MunitTest(List<MunitFlow> before, MunitTestFlow testFlow, List<MunitFlow> after) {
         this.before = before;
-        this.flow = flow;
+        this.testFlow = testFlow;
         this.after = after;
-        this.muleContext = flow.getMuleContext();
-    }
-
-    public String getName()
-    {
-        return flow.getName();
-    }
-
-    @Override
-    public int countTestCases()
-    {
-        return 1;
+        this.outputHandler = new DefaultOutputHandler();
+        this.muleContext = testFlow.getMuleContext();
     }
 
     /**
@@ -92,71 +49,38 @@ public class MunitTest extends TestCase
      * stack trace.
      * </p>
      *
-     * @throws Throwable
+     * @throws java.lang.Exception
      */
     @Override
-    protected void runTest() throws Throwable
-    {
-        if (flow.isIgnore())
-        {
-            return;
+    public TestResult doRun() throws Exception {
+        if (!shouldRun()) {
+            this.setStatus(IGNORE_STATUS);
+            return null;
         }
 
         MuleEvent event = muleEvent();
-        run(event, before);
+        processFlows(event, before);
 
         showDescription();
 
-        try
-        {
-            flow.process(event);
-        }
-        catch (Throwable t)
-        {
-            if (!flow.expectException(t, event))
-            {
-                t.setStackTrace(buildMuleStackTrace(event.getMuleContext())
-                                        .toArray(new StackTraceElement[] {}));
+        try {
+            testFlow.process(event);
+            this.setStatus(SUCCESS_STATUS);
+        } catch (Exception t) {
+            if (!testFlow.expectException(t, event)) {
+                t.setStackTrace(buildMuleStackTrace(event.getMuleContext()).toArray(new StackTraceElement[]{}));
+                this.setStatus(FAIL_STATUS);
                 throw t;
             }
 
-        }
-        finally
-        {
+        } finally {
             MunitCore.reset(muleContext);
-            run(event, after);
+            processFlows(event, after);
         }
+
+        return null;
     }
 
-    private void run(MuleEvent event, List<MunitFlow> flows) throws MuleException
-    {
-        if (flows != null)
-        {
-            for (MunitFlow flow : flows)
-            {
-                outputHandler.printDescription(flow.getName(), flow.getDescription());
-                flow.process(event);
-            }
-        }
-    }
-
-    private void showDescription()
-    {
-        outputHandler.printDescription(flow.getName(), flow.getDescription().replaceAll("\\.", "\\.%n"));
-    }
-
-
-    protected MuleEvent muleEvent()
-    {
-        try
-        {
-            return new DefaultMuleEvent(new DefaultMuleMessage(null, muleContext), MessageExchangePattern.REQUEST_RESPONSE, MuleTestUtils.getTestFlow(muleContext));
-        }
-        catch (Exception e)
-        {
-            return null;
-        }
-    }
 
 }
 

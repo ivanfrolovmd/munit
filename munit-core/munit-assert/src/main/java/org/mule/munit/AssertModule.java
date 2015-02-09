@@ -7,25 +7,13 @@
 package org.mule.munit;
 
 
-import static junit.framework.Assert.assertEquals;
 import org.mule.api.MuleMessage;
 import org.mule.api.el.ExpressionLanguageContext;
 import org.mule.api.el.ExpressionLanguageExtension;
 import org.mule.api.transport.PropertyScope;
-import org.mule.modules.interceptor.matchers.mel.AnyClassMatcherFunction;
-import org.mule.modules.interceptor.matchers.mel.AnyMatcherFunction;
-import org.mule.modules.interceptor.matchers.mel.ContainsMatcherFunction;
-import org.mule.modules.interceptor.matchers.mel.EqMatcherFunction;
-import org.mule.modules.interceptor.matchers.mel.NotNullMatcherFunction;
-import org.mule.modules.interceptor.matchers.mel.NullMatcherFunction;
-import org.mule.modules.interceptor.matchers.mel.RegexMatcherFunction;
+import org.mule.modules.interceptor.matchers.mel.*;
 import org.mule.munit.common.endpoint.MunitSpringFactoryPostProcessor;
-import org.mule.munit.mel.assertions.ElementMatcher;
-import org.mule.munit.mel.assertions.ElementMatcherFactory;
-import org.mule.munit.mel.assertions.ElementMatchingAssertionMelFunction;
-import org.mule.munit.mel.assertions.MessageHasElementAssertionCommand;
-import org.mule.munit.mel.assertions.MessageHasElementAssertionMelFunction;
-import org.mule.munit.mel.assertions.MessageMatchingAssertionMelFunction;
+import org.mule.munit.mel.assertions.*;
 import org.mule.munit.mel.utils.FlowResultFunction;
 import org.mule.munit.mel.utils.GetResourceFunction;
 import org.mule.transport.NullPayload;
@@ -35,18 +23,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static junit.framework.Assert.assertEquals;
+
 /**
  * <p>Module to assert payload's results</p>
  *
  * @author Mulesoft Inc.
  * @since 3.3.2
  */
-public class AssertModule extends MunitSpringFactoryPostProcessor implements ExpressionLanguageExtension
-{
+public class AssertModule extends MunitSpringFactoryPostProcessor implements ExpressionLanguageExtension {
+    
 
-
-    private static String wrapMessage(String message)
-    {
+    private static String wrapMessage(String message) {
         return message == null ? "" : message;
     }
 
@@ -60,8 +48,7 @@ public class AssertModule extends MunitSpringFactoryPostProcessor implements Exp
      * @param payload   payload
      * @param message   Description message to be shown in case of failure.
      */
-    public void assertThat(String message, Object payloadIs, Object payload)
-    {
+    public void assertThat(String message, Object payloadIs, Object payload) {
         assertEquals(wrapMessage(message), payloadIs, payload);
     }
 
@@ -71,8 +58,7 @@ public class AssertModule extends MunitSpringFactoryPostProcessor implements Exp
      * @param condition Boolean expression
      * @param message   Description message to be shown in case of failure.
      */
-    public void assertTrue(String message, Boolean condition)
-    {
+    public void assertTrue(String message, Boolean condition) {
         junit.framework.Assert.assertTrue(wrapMessage(message), condition);
     }
 
@@ -84,8 +70,7 @@ public class AssertModule extends MunitSpringFactoryPostProcessor implements Exp
      * @param value    Real value
      * @param message  Description message to be shown in case of failure.
      */
-    public void assertOnEquals(String message, Object expected, Object value)
-    {
+    public void assertOnEquals(String message, Object expected, Object value) {
         assertEquals(wrapMessage(message), expected, value);
     }
 
@@ -97,8 +82,7 @@ public class AssertModule extends MunitSpringFactoryPostProcessor implements Exp
      * @param value    real value
      * @param message  description message
      */
-    public void assertNotSame(String message, Object expected, Object value)
-    {
+    public void assertNotSame(String message, Object expected, Object value) {
         junit.framework.Assert.assertNotSame(wrapMessage(message), expected, value);
     }
 
@@ -108,8 +92,7 @@ public class AssertModule extends MunitSpringFactoryPostProcessor implements Exp
      * @param condition Boolean expression
      * @param message   Description message to be shown in case of failure.
      */
-    public void assertFalse(String message, Boolean condition)
-    {
+    public void assertFalse(String message, Boolean condition) {
         junit.framework.Assert.assertFalse(wrapMessage(message), condition);
     }
 
@@ -119,8 +102,7 @@ public class AssertModule extends MunitSpringFactoryPostProcessor implements Exp
      * @param payload payload
      * @param message Description message to be shown in case of failure.
      */
-    public void assertNotNull(String message, Object payload)
-    {
+    public void assertNotNull(String message, Object payload) {
         junit.framework.Assert.assertFalse(wrapMessage(message), payload instanceof NullPayload);
     }
 
@@ -130,8 +112,7 @@ public class AssertModule extends MunitSpringFactoryPostProcessor implements Exp
      * @param payload payload
      * @param message Description message to be shown in case of failure.
      */
-    public void assertNull(String message, Object payload)
-    {
+    public void assertNull(String message, Object payload) {
         junit.framework.Assert.assertTrue(wrapMessage(message), payload instanceof NullPayload);
     }
 
@@ -141,124 +122,97 @@ public class AssertModule extends MunitSpringFactoryPostProcessor implements Exp
      *
      * @param message Description message to be shown in case of failure.
      */
-    public void fail(String message)
-    {
+    public void fail(String message) {
         junit.framework.Assert.fail(wrapMessage(message));
     }
 
     @Override
-    public void configureContext(ExpressionLanguageContext context)
-    {
-        context.declareFunction("messageHasPropertyInAnyScopeCalled", new MessageHasElementAssertionMelFunction(new MessageHasElementAssertionCommand()
-        {
+    public void configureContext(ExpressionLanguageContext context) {
+        context.declareFunction("messageHasPropertyInAnyScopeCalled", new MessageHasElementAssertionMelFunction(new MessageHasElementAssertionCommand() {
             @Override
-            public boolean messageHas(String param, MuleMessage muleMessage)
-            {
+            public boolean messageHas(String param, MuleMessage muleMessage) {
                 boolean contains = false;
-                for (PropertyScope scope : PropertyScope.ALL_SCOPES)
-                {
+                for (PropertyScope scope : PropertyScope.ALL_SCOPES) {
                     contains = contains || (muleMessage.getProperty(param, scope) != null);
                 }
                 return contains;
             }
         }));
 
-        context.declareFunction("messageHasInboundPropertyCalled", new MessageHasElementAssertionMelFunction(new MessageHasElementAssertionCommand()
-        {
+        context.declareFunction("messageHasInboundPropertyCalled", new MessageHasElementAssertionMelFunction(new MessageHasElementAssertionCommand() {
             @Override
-            public boolean messageHas(String param, MuleMessage muleMessage)
-            {
+            public boolean messageHas(String param, MuleMessage muleMessage) {
                 return muleMessage.getInboundProperty(param) != null;
             }
         }));
 
-        context.declareFunction("messageHasOutboundPropertyCalled", new MessageHasElementAssertionMelFunction(new MessageHasElementAssertionCommand()
-        {
+        context.declareFunction("messageHasOutboundPropertyCalled", new MessageHasElementAssertionMelFunction(new MessageHasElementAssertionCommand() {
             @Override
-            public boolean messageHas(String param, MuleMessage muleMessage)
-            {
+            public boolean messageHas(String param, MuleMessage muleMessage) {
                 return muleMessage.getOutboundProperty(param) != null;
             }
         }));
 
-        context.declareFunction("messageHasSessionPropertyCalled", new MessageHasElementAssertionMelFunction(new MessageHasElementAssertionCommand()
-        {
+        context.declareFunction("messageHasSessionPropertyCalled", new MessageHasElementAssertionMelFunction(new MessageHasElementAssertionCommand() {
             @Override
-            public boolean messageHas(String param, MuleMessage muleMessage)
-            {
+            public boolean messageHas(String param, MuleMessage muleMessage) {
                 return muleMessage.getProperty(param, PropertyScope.SESSION) != null;
             }
         }));
 
-        context.declareFunction("messageHasInvocationPropertyCalled", new MessageHasElementAssertionMelFunction(new MessageHasElementAssertionCommand()
-        {
+        context.declareFunction("messageHasInvocationPropertyCalled", new MessageHasElementAssertionMelFunction(new MessageHasElementAssertionCommand() {
             @Override
-            public boolean messageHas(String param, MuleMessage muleMessage)
-            {
+            public boolean messageHas(String param, MuleMessage muleMessage) {
                 return muleMessage.getInvocationProperty(param) != null;
             }
         }));
 
-        context.declareFunction("messageHasInboundAttachmentCalled", new MessageHasElementAssertionMelFunction(new MessageHasElementAssertionCommand()
-        {
+        context.declareFunction("messageHasInboundAttachmentCalled", new MessageHasElementAssertionMelFunction(new MessageHasElementAssertionCommand() {
             @Override
-            public boolean messageHas(String param, MuleMessage muleMessage)
-            {
+            public boolean messageHas(String param, MuleMessage muleMessage) {
                 return muleMessage.getInboundAttachment(param) != null;
             }
         }));
 
-        context.declareFunction("messageHasOutboundAttachmentCalled", new MessageHasElementAssertionMelFunction(new MessageHasElementAssertionCommand()
-        {
+        context.declareFunction("messageHasOutboundAttachmentCalled", new MessageHasElementAssertionMelFunction(new MessageHasElementAssertionCommand() {
             @Override
-            public boolean messageHas(String param, MuleMessage muleMessage)
-            {
+            public boolean messageHas(String param, MuleMessage muleMessage) {
                 return muleMessage.getOutboundAttachment(param) != null;
             }
         }));
 
-        context.declareFunction("messageInboundProperty", new MessageMatchingAssertionMelFunction(new ElementMatcherFactory()
-        {
+        context.declareFunction("messageInboundProperty", new MessageMatchingAssertionMelFunction(new ElementMatcherFactory() {
             @Override
-            public ElementMatcher build(String elementName, MuleMessage muleMessage)
-            {
+            public ElementMatcher build(String elementName, MuleMessage muleMessage) {
                 return new ElementMatcher(muleMessage.getInboundProperty(elementName));
             }
         }));
 
-        context.declareFunction("messageOutboundProperty", new MessageMatchingAssertionMelFunction(new ElementMatcherFactory()
-        {
+        context.declareFunction("messageOutboundProperty", new MessageMatchingAssertionMelFunction(new ElementMatcherFactory() {
             @Override
-            public ElementMatcher build(String elementName, MuleMessage muleMessage)
-            {
+            public ElementMatcher build(String elementName, MuleMessage muleMessage) {
                 return new ElementMatcher(muleMessage.getOutboundProperty(elementName));
             }
         }));
 
 
-        context.declareFunction("messageInvocationProperty", new MessageMatchingAssertionMelFunction(new ElementMatcherFactory()
-        {
+        context.declareFunction("messageInvocationProperty", new MessageMatchingAssertionMelFunction(new ElementMatcherFactory() {
             @Override
-            public ElementMatcher build(String elementName, MuleMessage muleMessage)
-            {
+            public ElementMatcher build(String elementName, MuleMessage muleMessage) {
                 return new ElementMatcher(muleMessage.getInvocationProperty(elementName));
             }
         }));
 
-        context.declareFunction("messageInboundAttachment", new MessageMatchingAssertionMelFunction(new ElementMatcherFactory()
-        {
+        context.declareFunction("messageInboundAttachment", new MessageMatchingAssertionMelFunction(new ElementMatcherFactory() {
             @Override
-            public ElementMatcher build(String elementName, MuleMessage muleMessage)
-            {
+            public ElementMatcher build(String elementName, MuleMessage muleMessage) {
                 return new ElementMatcher(muleMessage.getInboundAttachment(elementName));
             }
         }));
 
-        context.declareFunction("messageOutboundAttachment", new MessageMatchingAssertionMelFunction(new ElementMatcherFactory()
-        {
+        context.declareFunction("messageOutboundAttachment", new MessageMatchingAssertionMelFunction(new ElementMatcherFactory() {
             @Override
-            public ElementMatcher build(String elementName, MuleMessage muleMessage)
-            {
+            public ElementMatcher build(String elementName, MuleMessage muleMessage) {
                 return new ElementMatcher(muleMessage.getOutboundAttachment(elementName));
             }
         }));
@@ -269,7 +223,7 @@ public class AssertModule extends MunitSpringFactoryPostProcessor implements Exp
         context.declareFunction("eq", new EqMatcherFunction());
         context.declareFunction("anyBoolean", new AnyMatcherFunction(Boolean.class));
         context.declareFunction("anyByte", new AnyMatcherFunction(Byte.class));
-	    context.declareFunction("anyByteArray", new AnyMatcherFunction(byte[].class));	
+        context.declareFunction("anyByteArray", new AnyMatcherFunction(byte[].class));
         context.declareFunction("anyInt", new AnyMatcherFunction(Integer.class));
         context.declareFunction("anyDouble", new AnyMatcherFunction(Double.class));
         context.declareFunction("anyFloat", new AnyMatcherFunction(Float.class));

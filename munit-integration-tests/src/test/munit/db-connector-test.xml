@@ -7,7 +7,7 @@
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/mock/current/mule-mock.xsd">
-    <munit:config doc:name="Munit configuration"/>
+    <munit:config groups="ll" mock-connectors="false" doc:name="Munit configuration"/>
     <spring:beans>
         <spring:import resource="classpath*:db-connector.xml"/>
     </spring:beans>
@@ -42,21 +42,7 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
     </munit:test>
 
 
-    <munit:test name="db-connectorUpdateFlowTest" description="Test">
-        <mock:when messageProcessor="db:update" doc:name="Mock">
-            <mock:then-return payload-ref="#[1]"/>
-        </mock:when>
-        <flow-ref name="db-connectorUpdateFlow" doc:name="Flow-ref to db-connectorUpdateFlow"/>
-        <mock:verify-call messageProcessor=".*:.*" doc:name="Verify Call">
-            <mock:attributes>
-                <mock:attribute whereValue-ref="#[string:Echo]" name="doc:name"/>
-            </mock:attributes>
-        </mock:verify-call>
-        <munit:assert-on-equals message="this is so so wrong!!!" expected-ref="#[1]" value-ref="#[payload]" doc:name="Assert Equals"/>
-    </munit:test>
-
-
-    <munit:test name="db-connectorDeleteFlowTest" description="Test">
+    <munit:test name="db-connectorDeleteFlowTest" description="Test" depends-on="db-connectorUpdateFlowTest">
         <mock:when messageProcessor="db:delete" doc:name="Mock">
             <mock:then-return payload-ref="#[1]"/>
         </mock:when>
@@ -67,6 +53,22 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
             </mock:attributes>
         </mock:verify-call>
         <munit:assert-on-equals message="this is so so wrong!!!" expected-ref="#[1]" value-ref="#[payload]" doc:name="Assert Equals"/>
+    </munit:test>
+
+    
+    
+    <munit:test  ignore="true" name="db-connectorUpdateFlowTest" description="Test">
+        <mock:when messageProcessor="db:update" doc:name="Mock">
+            <mock:then-return payload-ref="#[1]"/>
+        </mock:when>
+        <flow-ref name="db-connectorUpdateFlow" doc:name="Flow-ref to db-connectorUpdateFlow"/>
+        <mock:verify-call messageProcessor=".*:.*" doc:name="Verify Call">
+            <mock:attributes>
+                <mock:attribute whereValue-ref="#[string:Echo]" name="doc:name"/>
+            </mock:attributes>
+        </mock:verify-call>
+        <munit:assert-on-equals message="this is so so wrong!!!" expected-ref="#[1]" value-ref="#[payload]" doc:name="Assert Equals"/>
+        <!--<munit:assert-false condition="#[true]"/>-->
     </munit:test>
 
 </mule>

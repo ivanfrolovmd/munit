@@ -11,6 +11,7 @@ import org.mule.munit.config.MunitFlow;
 import org.mule.munit.config.MunitTestFlow;
 import org.mule.munit.runner.SuiteBuilder;
 import org.mule.munit.runner.output.TestOutputHandler;
+import org.mule.munit.runner.utils.MunitTestDependencyBuilder;
 
 import java.util.List;
 
@@ -21,19 +22,16 @@ import java.util.List;
  * @author Mulesoft Inc.
  * @since 3.3.2
  */
-public class MunitSuiteBuilder extends SuiteBuilder<MunitSuite, MunitTest>
-{
+public class MunitSuiteBuilder extends SuiteBuilder<MunitSuite, MunitTest> {
 
     private TestOutputHandler handler;
 
 
     public MunitSuiteBuilder(MuleContext muleContext,
-                             TestOutputHandler handler)
-    {
+                             TestOutputHandler handler) {
         super(muleContext);
 
-        if (handler == null)
-        {
+        if (handler == null) {
             throw new IllegalArgumentException("Handler must not be null");
         }
 
@@ -44,11 +42,9 @@ public class MunitSuiteBuilder extends SuiteBuilder<MunitSuite, MunitTest>
      * @see SuiteBuilder
      */
     @Override
-    protected MunitSuite createSuite(String name)
-    {
+    protected MunitSuite createSuite(String name) {
         MunitSuite suite = new MunitSuite(name);
-        for (MunitTest test : this.tests)
-        {
+        for (MunitTest test : this.tests) {
             suite.add(test);
         }
 
@@ -59,8 +55,12 @@ public class MunitSuiteBuilder extends SuiteBuilder<MunitSuite, MunitTest>
      * @see SuiteBuilder
      */
     @Override
-    protected MunitTest test(List<MunitFlow> beforeTest, MunitTestFlow test, List<MunitFlow> afterTest)
-    {
+    protected MunitTest test(List<MunitFlow> beforeTest, MunitTestFlow test, List<MunitFlow> afterTest) {
         return new MunitTest(beforeTest, test, afterTest, handler, muleContext);
+    }
+
+    protected void buildDependencies() {
+        MunitTestDependencyBuilder dependencyBuilder = new MunitTestDependencyBuilder(tests);
+        dependencyBuilder.build();
     }
 }

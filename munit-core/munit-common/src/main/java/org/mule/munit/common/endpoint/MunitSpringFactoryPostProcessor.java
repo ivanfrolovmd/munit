@@ -25,8 +25,7 @@ import java.util.logging.Logger;
  * @author Mulesoft Inc.
  * @since 3.3.2
  */
-public class MunitSpringFactoryPostProcessor
-{
+public class MunitSpringFactoryPostProcessor {
 
     private static Logger logger = Logger.getLogger("Bean definition Processor");
 
@@ -53,30 +52,44 @@ public class MunitSpringFactoryPostProcessor
     protected List<String> mockingExcludedFlows = new ArrayList<String>();
 
 
-
-
-    public void setMockInbounds(boolean mockInbounds)
-    {
+    public void setMockInbounds(boolean mockInbounds) {
         this.mockInbounds = mockInbounds;
     }
 
-    public void setMockingExcludedFlows(List<String> mockingExcludedFlows)
-    {
+    public void setMockingExcludedFlows(List<String> mockingExcludedFlows) {
         this.mockingExcludedFlows = mockingExcludedFlows;
     }
 
-    public boolean isMockInbounds()
-    {
+    public boolean isMockInbounds() {
         return mockInbounds;
     }
 
-    public boolean isMockConnectors()
-    {
+    public boolean isMockConnectors() {
         return mockConnectors;
     }
 
-    public void setMockConnectors(boolean mockConnectors)
-    {
+    public void setMockConnectors(boolean mockConnectors) {
         this.mockConnectors = mockConnectors;
     }
+
+    protected String groups = "";
+
+    public String getGroups() {
+        return  groups;
+    }
+    
+    public List<String> getGroupList() {
+        List<String> groupList = new ArrayList<String>();
+        String[] g = groups.split(",");
+        for (String group : g) {
+            groupList.add(group);
+        }
+//        return groups;
+        return groupList;
+    }
+
+    public void setGroups(String groups) {
+        this.groups = groups;
+    }
+
 }

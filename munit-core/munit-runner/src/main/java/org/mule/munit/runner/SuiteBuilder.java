@@ -12,6 +12,7 @@ import org.mule.munit.config.MunitAfterTest;
 import org.mule.munit.config.MunitBeforeTest;
 import org.mule.munit.config.MunitFlow;
 import org.mule.munit.config.MunitTestFlow;
+import org.mule.munit.runner.utils.MunitTestFlowSorter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,8 +28,7 @@ import java.util.List;
  * @author Mulesoft Inc.
  * @since 3.3.2
  */
-public abstract class SuiteBuilder<T, E>
-{
+public abstract class SuiteBuilder<T, E> {
 
     protected MuleContext muleContext;
 
@@ -55,11 +55,16 @@ public abstract class SuiteBuilder<T, E>
      */
     protected abstract E test(List<MunitFlow> beforeTest, MunitTestFlow test, List<MunitFlow> afterTest);
 
+
+    /**
+     * <p>Builds the tests dependencies</p>
+     */
+    protected abstract void buildDependencies();
+
     /**
      * @param muleContext Used to create the tests and pre/post proccessors.
      */
-    protected SuiteBuilder(MuleContext muleContext)
-    {
+    protected SuiteBuilder(MuleContext muleContext) {
         this.muleContext = muleContext;
     }
 
@@ -69,28 +74,30 @@ public abstract class SuiteBuilder<T, E>
      * @param suiteName The desired suite name
      * @return The Suite Object
      */
-    public T build(String suiteName)
-    {
+    public T build(String suiteName) {
         List<MunitFlow> before = lookupFlows(MunitBeforeTest.class);
         List<MunitFlow> after = lookupFlows(MunitAfterTest.class);
         Collection<MunitTestFlow> flowConstructs = lookupTests();
-        for (MunitTestFlow flowConstruct : flowConstructs)
-        {
+
+        MunitTestFlowSorter sorter = new MunitTestFlowSorter((List) flowConstructs);
+        for (MunitTestFlow flowConstruct : sorter.sort()) {
             tests.add(test(before, flowConstruct, after));
         }
+
+
+        buildDependencies();
+
 
         return createSuite(suiteName);
     }
 
-    private List<MunitFlow> lookupFlows(Class munitClass)
-    {
+    private List<MunitFlow> lookupFlows(Class munitClass) {
         return new ArrayList<MunitFlow>(muleContext.getRegistry()
-                                                .lookupObjects(munitClass));
+                .lookupObjects(munitClass));
     }
 
-    private Collection<MunitTestFlow> lookupTests()
-    {
+    private Collection<MunitTestFlow> lookupTests() {
         return new ArrayList<MunitTestFlow>(muleContext.getRegistry()
-                                                    .lookupObjects(MunitTestFlow.class));
+                .lookupObjects(MunitTestFlow.class));
     }
 }

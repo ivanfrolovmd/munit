@@ -91,6 +91,18 @@ public class MunitApplicationContextPostProcessor
         this.mockConnectors = mockConnectors;
     }
 
+
+    protected String groups = "";
+
+
+    public String getGroups() {
+        return groups;
+    }
+
+    public void setGroups(String groups) {
+        this.groups = groups;
+    }
+    
     /**
      * <p>
      * Implementation of the BeanFactoryPostProcessor. It removes the message sources of all the flows except

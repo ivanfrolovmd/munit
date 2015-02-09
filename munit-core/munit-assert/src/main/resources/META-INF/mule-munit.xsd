@@ -9,8 +9,7 @@
     <xs:import schemaLocation="http://www.mulesoft.org/schema/mule/core/current/mule.xsd"
                namespace="http://www.mulesoft.org/schema/mule/core"></xs:import>
 
-    <xs:element xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="config"
-                substitutionGroup="mule:abstract-extension">
+    <xs:element xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="config" substitutionGroup="mule:abstract-extension">
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="mule:abstractExtensionType">
@@ -44,7 +43,7 @@
                     </xs:attribute>
                     <xs:attribute name="mock-inbounds" use="optional" type="mule:substitutableBoolean" default="true">
                         <xs:annotation>
-                            <xs:documentation>Defines f the inbounds are mocked or not</xs:documentation>
+                            <xs:documentation>Defines if the inbounds are mocked or not</xs:documentation>
                         </xs:annotation>
                     </xs:attribute>
                     <xs:attribute name="mock-connectors" use="optional" type="mule:substitutableBoolean" default="true">
@@ -53,6 +52,11 @@
                                 mocked. If they are then all
                                 outbound endpoints/inbound endpoints must be mocked.
                             </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute name="groups" use="optional" type="xs:string" default="">
+                        <xs:annotation>
+                            <xs:documentation>Tags the Munit stuite as belonging to a tests group</xs:documentation>
                         </xs:annotation>
                     </xs:attribute>
                 </xs:extension>
@@ -483,6 +487,13 @@
                         <xs:documentation>Defines if the test must be ignored.</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
+                
+                <xs:attribute name="depends-on" use="optional" type="xs:string" default="">
+                    <xs:annotation>
+                        <xs:documentation>Defines if the test has dependencies.</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                
                 <xs:attribute name="expectExceptionThatSatisfies" use="optional" type="xs:string">
                     <xs:annotation>
                         <xs:documentation>Exception expression to match</xs:documentation>

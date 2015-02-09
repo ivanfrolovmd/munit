@@ -8,7 +8,6 @@
 <!-- BEGIN_INCLUDE(mock:outboundEndpoint) -->
 
         <mock:outbound-endpoint address="http://localhost:10443/test" returnPayload-ref="#[string:test]">
-
         </mock:outbound-endpoint>
 
 <!-- END_INCLUDE(mock:outboundEndpoint) -->
@@ -23,14 +22,14 @@
 
 <!-- BEGIN_INCLUDE(mock:spy) -->
 
-        <mock:spy messageProcessor="test"/>
+        <mock:spy messageProcessor="testFlow"/>
 
 
 <!-- END_INCLUDE(mock:spy) -->
 
 <!-- BEGIN_INCLUDE(mock:expectFail) -->
 
-        <mock:throw-an exception-ref="#[new Exception()]" whenCalling="test"/>
+        <mock:throw-an exception-ref="#[new Exception()]" whenCalling="testFlow"/>
 
 
 <!-- END_INCLUDE(mock:expectFail) -->

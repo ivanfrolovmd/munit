@@ -7,6 +7,7 @@
 package org.mule.munit.runner.java;
 
 import junit.framework.*;
+import org.apache.commons.lang.StringUtils;
 import org.junit.runner.Describable;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -15,6 +16,8 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
 import org.mule.api.MuleContext;
+import org.mule.api.registry.RegistrationException;
+import org.mule.munit.AssertModule;
 import org.mule.munit.runner.MuleContextManager;
 import org.mule.munit.runner.MunitRunner;
 import org.mule.munit.runner.output.DefaultOutputHandler;
@@ -72,6 +75,8 @@ public class MuleSuiteRunner extends Runner implements Filterable, Sortable
     @Override
     public void run(RunNotifier notifier)
     {
+//        belongToGroups("");
+
         final TestResult result = new TestResult();
         result.addListener(createAdaptingListener(notifier));
 
@@ -209,4 +214,35 @@ public class MuleSuiteRunner extends Runner implements Filterable, Sortable
         }
     }
 
+
+
+
+
+//    /**
+//     * *
+//     *
+//     * @param groups
+//     * @return true if groups is empty or if groups matches the definitions
+//     */
+//    private boolean belongToGroups(String groups) {
+//        AssertModule munitSuiteConfiguration = null;
+//        try {
+//            munitSuiteConfiguration = muleContext.getRegistry().lookupObject(AssertModule.class);
+//        } catch (RegistrationException e) {
+//            // TODO FIX THIS
+//            e.printStackTrace();
+//        }
+//
+//        if (StringUtils.isBlank(groups)) {
+//            return true;
+//        }
+//
+//        String[] runningGroups = groups.split(",");
+//        for (String runningGroup : runningGroups) {
+//            if (munitSuiteConfiguration.getGroupList().contains(runningGroup)) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 }

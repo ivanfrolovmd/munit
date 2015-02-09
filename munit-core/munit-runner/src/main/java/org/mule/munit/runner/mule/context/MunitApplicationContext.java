@@ -50,7 +50,9 @@ public class MunitApplicationContext extends MuleArtifactContext {
     public static final String MUNIT_FACTORY_POST_PROCESSOR = "___MunitSpringFactoryPostProcessor";
     public static final String MOCK_INBOUNDS_PROPERTY_NAME = "mockInbounds";
     public static final String MOCK_CONNECTORS_PROPERTY_NAME = "mockConnectors";
+    public static final String GROUPS_PROPERTY_NAME = "groups";
     public static final String MOCKING_EXCLUDED_FLOWS_PROPERTY_NAME = "mockingExcludedFlows";
+    
 
     /**
      * <p>
@@ -84,6 +86,7 @@ public class MunitApplicationContext extends MuleArtifactContext {
             propertyValues.add(MOCK_INBOUNDS_PROPERTY_NAME, configuration.isMockInbounds());
             propertyValues.add(MOCK_CONNECTORS_PROPERTY_NAME, configuration.isMockConnectors());
             propertyValues.add(MOCKING_EXCLUDED_FLOWS_PROPERTY_NAME, configuration.getMockingExcludedFlows());
+            propertyValues.add(GROUPS_PROPERTY_NAME, configuration.getGroups());
             beanDefinition.setPropertyValues(propertyValues);
             beanFactory.registerBeanDefinition(MUNIT_FACTORY_POST_PROCESSOR, beanDefinition);
         }
@@ -109,6 +112,7 @@ public class MunitApplicationContext extends MuleArtifactContext {
         postProcessor.setMockConnectors((Boolean) propertyValues.getPropertyValue("mockConnectors").getValue());
         postProcessor.setMockInbounds((Boolean) propertyValues.getPropertyValue("mockInbounds").getValue());
         postProcessor.setMockingExcludedFlows((List) propertyValues.getPropertyValue("mockingExcludedFlows").getValue());
+        postProcessor.setGroups((String) propertyValues.getPropertyValue("groups").getValue());
         postProcessor.postProcessBeanFactory(beanFactory);
 
     }

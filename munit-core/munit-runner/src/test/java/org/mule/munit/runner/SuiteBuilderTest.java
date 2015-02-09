@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class SuiteBuilderTest
 {
@@ -102,6 +103,12 @@ public class SuiteBuilderTest
             assertEquals(munitTest, test);
             return new MockTest();
         }
+
+        //TODO fix this it sucks
+        protected void buildDependencies() {
+            
+        }
+
 
     }
 

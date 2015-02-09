@@ -23,7 +23,7 @@ public class MunitPluginFactoryTest
     @Test
     public void test() throws Exception
     {
-        MuleContextManager muleContextManager = new MuleContextManager(new MockingConfiguration(false, new ArrayList<String>(), false, new Properties()));
+        MuleContextManager muleContextManager = new MuleContextManager(new MockingConfiguration(false, new ArrayList<String>(), false, new Properties(),""));
         MuleContext muleContext = muleContextManager.startMule("munit-config.xml");
         muleContextManager.killMule(muleContext);
 

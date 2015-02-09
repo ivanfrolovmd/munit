@@ -39,7 +39,7 @@ public abstract class MunitRunner<T>
 
     private MuleContext muleContext;
 
-    public MunitRunner(TestOutputHandler handler, MuleContextManager muleContextManager, MuleContext muleContext)
+    public  MunitRunner(TestOutputHandler handler, MuleContextManager muleContextManager, MuleContext muleContext)
     {
         this.handler = handler;
         this.muleContextManager = muleContextManager;

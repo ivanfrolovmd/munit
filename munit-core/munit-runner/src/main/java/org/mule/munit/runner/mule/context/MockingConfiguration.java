@@ -17,39 +17,52 @@ import java.util.Properties;
  * @author Mulesoft Inc.
  * @since 3.3.2
  */
-public class MockingConfiguration
-{
+public class MockingConfiguration {
 
     private boolean mockInbounds;
     private List<String> mockingExcludedFlows;
     private boolean mockConnectors;
     private Properties startUpProperties;
+    private String groups;
 
-    public MockingConfiguration(boolean mockInbounds, List<String> mockingExcludedFlows, boolean mockConnectors, Properties startUpProperties)
-    {
+//    public MockingConfiguration(boolean mockInbounds, List<String> mockingExcludedFlows, boolean mockConnectors, Properties startUpProperties)
+//    {
+//        this.mockInbounds = mockInbounds;
+//        this.mockingExcludedFlows = mockingExcludedFlows;
+//        this.mockConnectors = mockConnectors;
+//        this.startUpProperties = startUpProperties;
+//    }
+
+    public MockingConfiguration(boolean mockInbounds, List<String> mockingExcludedFlows, boolean mockConnectors, Properties startUpProperties) {
+        this(mockInbounds, mockingExcludedFlows, mockConnectors, startUpProperties, "");
+
+    }
+
+    public MockingConfiguration(boolean mockInbounds, List<String> mockingExcludedFlows, boolean mockConnectors, Properties startUpProperties, String groups) {
         this.mockInbounds = mockInbounds;
         this.mockingExcludedFlows = mockingExcludedFlows;
         this.mockConnectors = mockConnectors;
         this.startUpProperties = startUpProperties;
+        this.groups = groups;
     }
 
-    public List<String> getMockingExcludedFlows()
-    {
+    public List<String> getMockingExcludedFlows() {
         return mockingExcludedFlows;
     }
 
-    public boolean isMockInbounds()
-    {
+    public boolean isMockInbounds() {
         return mockInbounds;
     }
 
-    public boolean isMockConnectors()
-    {
+    public boolean isMockConnectors() {
         return mockConnectors;
     }
 
-    public Properties getStartUpProperties()
-    {
+    public Properties getStartUpProperties() {
         return startUpProperties;
+    }
+
+    public String getGroups() {
+        return groups;
     }
 }
