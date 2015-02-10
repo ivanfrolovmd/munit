@@ -4,7 +4,7 @@
     <parent>
         <artifactId>munit-core</artifactId>
         <groupId>org.mule.munit</groupId>
-        <version>3.6.0-BETA-SNAPSHOT</version>
+        <version>3.6.0-BETA</version>
     </parent>
     <artifactId>munit-assert</artifactId>
     <packaging>jar</packaging>

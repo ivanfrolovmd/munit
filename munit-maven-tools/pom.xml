@@ -4,7 +4,7 @@
     <parent>
         <artifactId>munit</artifactId>
         <groupId>org.mule</groupId>
-        <version>3.6.0-BETA-SNAPSHOT</version>
+        <version>3.6.0-BETA</version>
     </parent>
     <groupId>org.mule.munit</groupId>
     <artifactId>munit-maven-tools</artifactId>
