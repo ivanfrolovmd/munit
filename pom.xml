@@ -4,7 +4,7 @@
 
     <groupId>org.mule</groupId>
     <artifactId>munit</artifactId>
-    <version>3.6.0-BETA</version>
+    <version>3.6.0-BETA1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>The Munit Project</name>
@@ -12,7 +12,7 @@
     <properties>
         <mule.version>3.6.0</mule.version>
         <mule.devkit.version>3.6.0</mule.devkit.version>
-        <interceptor.api.version>3.6.0-BETA</interceptor.api.version>
+        <interceptor.api.version>3.6.0-BETA1-SNAPSHOT</interceptor.api.version>
 
         <maven.javadoc.skip>true</maven.javadoc.skip>
 

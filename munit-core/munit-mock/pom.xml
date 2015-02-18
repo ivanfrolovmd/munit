@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mule.munit</groupId>
     <artifactId>munit-mock</artifactId>
-    <version>3.6.0-BETA</version>
+    <version>3.6.0-BETA1-SNAPSHOT</version>
     <packaging>mule-module</packaging>
     <name>Module for Mocking</name>
 
