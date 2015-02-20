@@ -9,6 +9,7 @@ package org.mule.munit.common.mp;
 import net.sf.cglib.asm.Type;
 import net.sf.cglib.core.Signature;
 import net.sf.cglib.proxy.MethodProxy;
+import org.mule.DefaultMuleEvent;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.processor.MessageProcessor;
@@ -32,7 +33,9 @@ public class MunitMessageProcessorInterceptor extends AbstractMessageProcessorIn
     private String lineNumber;
 
     public Object process(Object obj, Object[] args, MethodProxy proxy) throws Throwable {
-        MuleEvent event = (MuleEvent) args[0];
+
+        MuleEvent originalEvent = (MuleEvent) args[0];
+        MuleEvent event = DefaultMuleEvent.copy(originalEvent);
 
         MockedMessageProcessorManager manager = getMockedMessageProcessorManager(event.getMuleContext());
 
@@ -55,7 +58,6 @@ public class MunitMessageProcessorInterceptor extends AbstractMessageProcessorIn
 
             return handleInterceptingMessageProcessors(obj, event);
         }
-
 
         Object o = invokeSuper(obj, args, proxy);
         runSpyAssertion(manager.getBetterMatchingAfterSpyAssertion(messageProcessorCall), (MuleEvent) o);

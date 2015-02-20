@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:spring="http://www.springframework.org/schema/beans"
+      xmlns:script="http://www.mulesoft.org/schema/mule/scripting"
+      xmlns:mock="http://www.mulesoft.org/schema/mule/mock"
+      xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+      xmlns:mclient="http://www.mulesoft.org/schema/mule/mclient"
+
+      xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+            http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+            http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd
+            http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/mock/current/mule-mock.xsd
+            http://www.mulesoft.org/schema/mule/mclient http://www.mulesoft.org/schema/mule/mclient/current/mule-mclient.xsd             ">
+
+
+
+    <munit:config/>
+    <spring:beans>
+        <spring:import resource="mel-evaluation.xml"/>
+    </spring:beans>
+
+    <munit:test name="myFlowTest" description="Test">
+        <flow-ref name="melFlow"/>
+        <munit:assert-on-equals message="al horno lalero" expected-ref="#['1']" value-ref="#[flowVars['lalero']]"/>
+
+        <!--<munit:assert-on-equals message="The count is not as expected!!!" expected-ref="#[1]" value-ref="#[payload.getCount()]" />-->
+    </munit:test>
+    
+
+
+</mule>
