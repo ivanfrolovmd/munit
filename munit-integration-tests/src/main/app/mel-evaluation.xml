@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+        xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+        version="EE-3.5.1"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+    <flow name="melFlow" doc:name="Flow">
+        <set-variable variableName="lalero" value="#[flowVars['lalero']==null? flowVars['lalero']='1';return '1';:flowVars['lalero']='2';return '2';]" doc:name="Variable"/>
+    </flow>
+</mule>

@@ -10,6 +10,7 @@ import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.NestedProcessor;
+import org.mule.api.devkit.NestedProcessorChain;
 import org.mule.api.processor.MessageProcessor;
 
 import java.util.HashMap;
@@ -60,7 +61,13 @@ public class NestedMessageProcessor implements MessageProcessor {
             for (String name : event.getMessage().getInvocationPropertyNames()) {
                 invocationProperties.put(name, event.getMessage().getInvocationProperty(name));
             }
+
+            if(nestedProcessor.getClass().isAssignableFrom(NestedProcessorChain.class)) {
+                ((NestedProcessorChain)nestedProcessor).setEvent(event);
+            }
+            
             nestedProcessor.process(payload, invocationProperties);
+            
         } catch (Exception e) {
             throw new DefaultMuleException(e);
         }
