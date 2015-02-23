@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mule.munit.utils</groupId>
     <artifactId>munit-utils-update-site</artifactId>
@@ -79,11 +80,16 @@
                                 <phase>install</phase>
                                 <configuration>
                                     <tasks>
-                                        <taskdef classpathref="maven.plugin.classpath" resource="org/mule/ant/tasks.properties" />
-                                        <s3delete bucket="munit" dir="utils" endpoint="s3.amazonaws.com" key="${aws.key}" secret="${aws.secret}" />
-                                        <s3upload bucket="munit" contentType="application/x-whatever" dest="utils" endpoint="s3.amazonaws.com" key="${aws.key}" publicRead="true" secret="${aws.secret}">
-                                            
-                                            <fileset dir="${basedir}/target/repository" />
+                                        <taskdef classpathref="maven.plugin.classpath" resource="org/mule/ant/tasks.properties"/>
+                                        <s3delete bucket="munit" dir="utils" endpoint="s3.amazonaws.com" key="${aws.key}" secret="${aws.secret}"/>
+                                        <s3upload bucket="munit" contentType="application/x-whatever" 
+                                                        dest="utils" 
+                                                        endpoint="s3.amazonaws.com" 
+                                                        key="${aws.key}" 
+                                                        publicRead="true" 
+                                                        secret="${aws.secret}">
+
+                                            <fileset dir="${basedir}/target/repository"/>
                                         </s3upload>
 
                                     </tasks>
