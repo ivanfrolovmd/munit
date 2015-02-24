@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.mule.munit.utils</groupId>
@@ -13,50 +14,4 @@
     <properties>
         <licensePath>../../LICENSE_HEADER.txt</licensePath>
     </properties>
-
-    <profiles>
-        <profile>
-            <id>sign</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jarsigner-plugin</artifactId>
-                        <version>1.2</version>
-                        <executions>
-                            <execution>
-                                <id>sign</id>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>verify</id>
-                                <goals>
-                                    <goal>verify</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <certs>true</certs>
-                            <verbose>false</verbose>
-                            <storetype>JKS</storetype>
-                            <keystore>${keystore.path}</keystore>
-                            <alias>mulesoft</alias>
-                            <storepass>${keystore.store.password}</storepass>
-                            <arguments>
-                                <argument>-tsa</argument>
-                                <argument>https://timestamp.geotrust.com/tsa</argument>
-                            </arguments>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-            <activation>
-                <property>
-                    <name>production</name>
-                </property>
-            </activation>
-        </profile>
-    </profiles>
 </project>

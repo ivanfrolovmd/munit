@@ -80,14 +80,16 @@
                                 <phase>install</phase>
                                 <configuration>
                                     <tasks>
-                                        <taskdef classpathref="maven.plugin.classpath" resource="org/mule/ant/tasks.properties"/>
-                                        <s3delete bucket="munit" dir="utils" endpoint="s3.amazonaws.com" key="${aws.key}" secret="${aws.secret}"/>
-                                        <s3upload bucket="munit" contentType="application/x-whatever" 
-                                                        dest="utils" 
-                                                        endpoint="s3.amazonaws.com" 
-                                                        key="${aws.key}" 
-                                                        publicRead="true" 
-                                                        secret="${aws.secret}">
+                                        <taskdef classpathref="maven.plugin.classpath"
+                                                 resource="org/mule/ant/tasks.properties"/>
+                                        <s3delete bucket="munit" dir="utils" endpoint="s3.amazonaws.com"
+                                                  key="${aws.key}" secret="${aws.secret}"/>
+                                        <s3upload bucket="munit" contentType="application/x-whatever"
+                                                  dest="utils"
+                                                  endpoint="s3.amazonaws.com"
+                                                  key="${aws.key}"
+                                                  publicRead="true"
+                                                  secret="${aws.secret}">
 
                                             <fileset dir="${basedir}/target/repository"/>
                                         </s3upload>
