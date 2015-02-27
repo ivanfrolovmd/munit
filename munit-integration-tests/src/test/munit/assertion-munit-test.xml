@@ -138,6 +138,11 @@
             <munit:inbound-properties>
                 <munit:inbound-property key="inbound" value-ref="#[string:inboundValue]"/>
             </munit:inbound-properties>
+            
+            <munit:session-properties>
+                <munit:session-property key="session" value-ref="#[string:sessionValue]"/>
+            </munit:session-properties>
+
             <munit:outbound-properties>
                 <munit:outbound-property key="outbound" value-ref="#[string:outboundValue]"/>
             </munit:outbound-properties>
@@ -156,6 +161,10 @@
         <munit:assert-true condition="#[messageHasPropertyInAnyScopeCalled('outbound')]"/>
         <munit:assert-true condition="#[messageHasOutboundPropertyCalled('outbound')]"/>
         <munit:assert-true condition="#[messageOutboundProperty('outbound').is(eq('outboundValue'))]"/>
+
+        <munit:assert-true condition="#[messageHasPropertyInAnyScopeCalled('session')]"/>
+        <munit:assert-true condition="#[messageHasSessionPropertyCalled('session')]"/>
+        
     </munit:test>
 
     <munit:test name="testMelFunctionsOnBinaryPayload" description="Test MEL assertions on binary payload">
