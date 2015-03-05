@@ -10,10 +10,19 @@
 
     <properties>
         <amazonDestination>${amazon.destination}</amazonDestination>
+        <aws.key>${settings.servers.mulesoft-s3.username}</aws.key>
+        <aws.secret>${settings.servers.mulesoft-s3.password}</aws.secret>
     </properties>
 
 
     <build>
+        <extensions>
+            <extension>
+                <groupId>com.github.shyiko.servers-maven-extension</groupId>
+                <artifactId>servers-maven-extension</artifactId>
+                <version>1.2.0</version>
+            </extension>
+        </extensions>
         <plugins>
             <plugin>
                 <groupId>org.eclipse.tycho.extras</groupId>
