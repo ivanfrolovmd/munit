@@ -367,4 +367,21 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
+
+
+    <profiles>
+        <profile>
+            <id>sign</id>
+            <properties>
+                <alias>mulesoft</alias>
+                <tsaUrl>https://timestamp.geotrust.com/tsa</tsaUrl>
+
+                <keypass>${key.pass}</keypass>
+                <storepass>${store.pass}</storepass>
+                <signatureKey>${signature.key}</signatureKey>
+                <keystorePath>${keystore.path}</keystorePath>
+            </properties>
+        </profile>
+    </profiles>
+
 </project>

@@ -8,6 +8,10 @@
     <packaging>pom</packaging>
     <name>Update site generator for Munit utils</name>
 
+    <properties>
+        <amazonDestination>${amazon.destination}</amazonDestination>
+    </properties>
+
 
     <build>
         <plugins>
@@ -82,13 +86,18 @@
                                     <tasks>
                                         <taskdef classpathref="maven.plugin.classpath"
                                                  resource="org/mule/ant/tasks.properties"/>
-                                        <s3delete bucket="munit" dir="utils" endpoint="s3.amazonaws.com"
-                                                  key="${aws.key}" secret="${aws.secret}"/>
-                                        <s3upload bucket="munit" contentType="application/x-whatever"
-                                                  dest="utils"
+                                        <!--dest="utils"-->
+                                        <s3delete bucket="munit"
                                                   endpoint="s3.amazonaws.com"
-                                                  key="${aws.key}"
+                                                  dir="${amazonDestination}" 
+                                                  key="${aws.key}" 
+                                                  secret="${aws.secret}"/>
+                                        <s3upload bucket="munit"
+                                                  endpoint="s3.amazonaws.com"
+                                                  dest="${amazonDestination}"
+                                                  contentType="application/x-whatever"
                                                   publicRead="true"
+                                                  key="${aws.key}"
                                                   secret="${aws.secret}">
 
                                             <fileset dir="${basedir}/target/repository"/>
