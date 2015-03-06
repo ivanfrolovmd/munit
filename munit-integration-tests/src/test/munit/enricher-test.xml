@@ -17,165 +17,165 @@
     <munit:config/>
     <mock:config/>
 
-    <spring:beans>
-        <spring:import resource="enricher-config.xml"/>
-    </spring:beans>
+    <!--<spring:beans>-->
+        <!--<spring:import resource="enricher-config.xml"/>-->
+    <!--</spring:beans>-->
 
 
-    <script:script name="mockOrganization" engine="groovy"><![CDATA[
-            org.mule.munit.Organization organization = new org.mule.munit.Organization();
-            organization.setDatabase("databaseName");
-			return organization;
-		]]>
-    </script:script>
+    <!--<script:script name="mockOrganization" engine="groovy"><![CDATA[-->
+            <!--org.mule.munit.Organization organization = new org.mule.munit.Organization();-->
+            <!--organization.setDatabase("databaseName");-->
+			<!--return organization;-->
+		<!--]]>-->
+    <!--</script:script>-->
 
-    <script:script name="mockConsumer" engine="groovy"><![CDATA[
-			return new org.mule.munit.Consumer();
-		]]>
-    </script:script>
+    <!--<script:script name="mockConsumer" engine="groovy"><![CDATA[-->
+			<!--return new org.mule.munit.Consumer();-->
+		<!--]]>-->
+    <!--</script:script>-->
 
-    <munit:test name="testCreateConsumerVersion" description="Testing the API to create a consumer version">
-        <munit:set payload-ref="#[resultOfScript('mockConsumer')]">
-            <munit:invocation-properties>
-                <munit:invocation-property key="consumerName" value-ref="#[string:consumerName]"/>
-            </munit:invocation-properties>
-            <munit:inbound-properties>
-                <munit:inbound-property key="http.query.params"
-                                        value-ref="#[['organizationName':'dummyOrganization']]"/>
-            </munit:inbound-properties>
-        </munit:set>
+    <!--<munit:test name="testCreateConsumerVersion" description="Testing the API to create a consumer version">-->
+        <!--<munit:set payload-ref="#[resultOfScript('mockConsumer')]">-->
+            <!--<munit:invocation-properties>-->
+                <!--<munit:invocation-property key="consumerName" value-ref="#[string:consumerName]"/>-->
+            <!--</munit:invocation-properties>-->
+            <!--<munit:inbound-properties>-->
+                <!--<munit:inbound-property key="http.query.params"-->
+                                        <!--value-ref="#[['organizationName':'dummyOrganization']]"/>-->
+            <!--</munit:inbound-properties>-->
+        <!--</munit:set>-->
 
-        <mock:when messageProcessor="morphia:find-single">
-            <mock:with-attributes>
-                <mock:with-attribute name="className" whereValue-ref="#[string:org.mule.munit.Organization]"/>
-            </mock:with-attributes>
-            <mock:then-return payload-ref="#[resultOfScript('mockOrganization')]"/>
-        </mock:when>
+        <!--<mock:when messageProcessor="morphia:find-single">-->
+            <!--<mock:with-attributes>-->
+                <!--<mock:with-attribute name="className" whereValue-ref="#[string:org.mule.munit.Organization]"/>-->
+            <!--</mock:with-attributes>-->
+            <!--<mock:then-return payload-ref="#[resultOfScript('mockOrganization')]"/>-->
+        <!--</mock:when>-->
 
-        <mock:when messageProcessor="morphia:find-single">
-            <mock:with-attributes>
-                <mock:with-attribute name="className" whereValue-ref="#[string:org.mule.munit.Consumer]"/>
-            </mock:with-attributes>
-            <mock:then-return payload-ref="#[resultOfScript('mockConsumer')]"/>
-        </mock:when>
+        <!--<mock:when messageProcessor="morphia:find-single">-->
+            <!--<mock:with-attributes>-->
+                <!--<mock:with-attribute name="className" whereValue-ref="#[string:org.mule.munit.Consumer]"/>-->
+            <!--</mock:with-attributes>-->
+            <!--<mock:then-return payload-ref="#[resultOfScript('mockConsumer')]"/>-->
+        <!--</mock:when>-->
 
-        <mock:when messageProcessor="morphia:save">
-            <mock:then-return payload-ref="#[string:anyPayload]"/>
-        </mock:when>
+        <!--<mock:when messageProcessor="morphia:save">-->
+            <!--<mock:then-return payload-ref="#[string:anyPayload]"/>-->
+        <!--</mock:when>-->
 
-        <mock:when messageProcessor="loggly:logger"/>
+        <!--<mock:when messageProcessor="loggly:logger"/>-->
 
-        <flow-ref name="create-consumer-version"/>
+        <!--<flow-ref name="create-consumer-version"/>-->
 
-        <mock:verify-call messageProcessor="morphia:find-single" times="2"/>
-        <mock:verify-call messageProcessor="morphia:save" times="1"/>
+        <!--<mock:verify-call messageProcessor="morphia:find-single" times="2"/>-->
+        <!--<mock:verify-call messageProcessor="morphia:save" times="1"/>-->
 
-        <munit:assert-on-equals expected-ref='#[Integer.valueOf("1")]'
-                                value-ref="#[flowVars['consumer'].getVersions().size()]"/>
-        <munit:assert-on-equals expected-ref='#[string:3.3.1]'
-                                value-ref="#[flowVars['consumer'].getVersions().get(0)]"/>
-    </munit:test>
+        <!--<munit:assert-on-equals expected-ref='#[Integer.valueOf("1")]'-->
+                                <!--value-ref="#[flowVars['consumer'].getVersions().size()]"/>-->
+        <!--<munit:assert-on-equals expected-ref='#[string:3.3.1]'-->
+                                <!--value-ref="#[flowVars['consumer'].getVersions().get(0)]"/>-->
+    <!--</munit:test>-->
 
-    <munit:test name="testCreateConsumerVersionInvalidConsumer"
-                description="Testing the API to create a consumer version with invalid consumer name">
-        <munit:set payload-ref="#[resultOfScript('mockConsumer')]">
-            <munit:invocation-properties>
-                <munit:invocation-property key="consumerName" value-ref="#[string:consumerName]"/>
-            </munit:invocation-properties>
-            <munit:inbound-properties>
-                <munit:inbound-property key="http.query.params"
-                                        value-ref="#[['organizationName':'dummyOrganization']]"/>
-            </munit:inbound-properties>
-        </munit:set>
+    <!--<munit:test name="testCreateConsumerVersionInvalidConsumer"-->
+                <!--description="Testing the API to create a consumer version with invalid consumer name">-->
+        <!--<munit:set payload-ref="#[resultOfScript('mockConsumer')]">-->
+            <!--<munit:invocation-properties>-->
+                <!--<munit:invocation-property key="consumerName" value-ref="#[string:consumerName]"/>-->
+            <!--</munit:invocation-properties>-->
+            <!--<munit:inbound-properties>-->
+                <!--<munit:inbound-property key="http.query.params"-->
+                                        <!--value-ref="#[['organizationName':'dummyOrganization']]"/>-->
+            <!--</munit:inbound-properties>-->
+        <!--</munit:set>-->
 
-        <mock:when messageProcessor="morphia:find-single">
-            <mock:with-attributes>
-                <mock:with-attribute name="className" whereValue-ref="#[string:org.mule.munit.Organization]"/>
-            </mock:with-attributes>
-            <mock:then-return payload-ref="#[resultOfScript('mockOrganization')]"/>
-        </mock:when>
+        <!--<mock:when messageProcessor="morphia:find-single">-->
+            <!--<mock:with-attributes>-->
+                <!--<mock:with-attribute name="className" whereValue-ref="#[string:org.mule.munit.Organization]"/>-->
+            <!--</mock:with-attributes>-->
+            <!--<mock:then-return payload-ref="#[resultOfScript('mockOrganization')]"/>-->
+        <!--</mock:when>-->
 
-        <mock:when messageProcessor="morphia:find-single">
-            <mock:with-attributes>
-                <mock:with-attribute name="className" whereValue-ref="#[string:org.mule.munit.Consumer]"/>
-            </mock:with-attributes>
-            <mock:then-return payload-ref="#[groovy:org.mule.transport.NullPayload.getInstance()]"/>
-        </mock:when>
+        <!--<mock:when messageProcessor="morphia:find-single">-->
+            <!--<mock:with-attributes>-->
+                <!--<mock:with-attribute name="className" whereValue-ref="#[string:org.mule.munit.Consumer]"/>-->
+            <!--</mock:with-attributes>-->
+            <!--<mock:then-return payload-ref="#[groovy:org.mule.transport.NullPayload.getInstance()]"/>-->
+        <!--</mock:when>-->
 
-        <mock:when messageProcessor="loggly:logger"/>
+        <!--<mock:when messageProcessor="loggly:logger"/>-->
 
-        <flow-ref name="create-consumer-version"/>
+        <!--<flow-ref name="create-consumer-version"/>-->
 
-        <mock:verify-call messageProcessor="morphia:find-single" times="2"/>
-        <mock:verify-call messageProcessor="morphia:save" times="0"/>
-        <munit:assert-on-equals expected-ref='#[string:404]' value-ref="#[message.outboundProperties['http.status']]"/>
-    </munit:test>
+        <!--<mock:verify-call messageProcessor="morphia:find-single" times="2"/>-->
+        <!--<mock:verify-call messageProcessor="morphia:save" times="0"/>-->
+        <!--<munit:assert-on-equals expected-ref='#[string:404]' value-ref="#[message.outboundProperties['http.status']]"/>-->
+    <!--</munit:test>-->
 
-    <munit:test name="testCreateConsumerVersionInvalidOrganization"
-                description="Testing the API to create a consumer version with invalid organization name">
-        <munit:set payload-ref="#[resultOfScript('mockConsumer')]">
-            <munit:invocation-properties>
-                <munit:invocation-property key="consumerName" value-ref="#[string:consumerName]"/>
-            </munit:invocation-properties>
-            <munit:inbound-properties>
-                <munit:inbound-property key="http.query.params"
-                                        value-ref="#[['organizationName':'dummyOrganization']]"/>
-            </munit:inbound-properties>
-        </munit:set>
+    <!--<munit:test name="testCreateConsumerVersionInvalidOrganization"-->
+                <!--description="Testing the API to create a consumer version with invalid organization name">-->
+        <!--<munit:set payload-ref="#[resultOfScript('mockConsumer')]">-->
+            <!--<munit:invocation-properties>-->
+                <!--<munit:invocation-property key="consumerName" value-ref="#[string:consumerName]"/>-->
+            <!--</munit:invocation-properties>-->
+            <!--<munit:inbound-properties>-->
+                <!--<munit:inbound-property key="http.query.params"-->
+                                        <!--value-ref="#[['organizationName':'dummyOrganization']]"/>-->
+            <!--</munit:inbound-properties>-->
+        <!--</munit:set>-->
 
-        <mock:when messageProcessor="morphia:find-single">
-            <mock:with-attributes>
-                <mock:with-attribute name="className" whereValue-ref="#[string:org.mule.munit.Organization]"/>
-            </mock:with-attributes>
-            <mock:then-return payload-ref="#[groovy:org.mule.transport.NullPayload.getInstance()]"/>
-        </mock:when>
+        <!--<mock:when messageProcessor="morphia:find-single">-->
+            <!--<mock:with-attributes>-->
+                <!--<mock:with-attribute name="className" whereValue-ref="#[string:org.mule.munit.Organization]"/>-->
+            <!--</mock:with-attributes>-->
+            <!--<mock:then-return payload-ref="#[groovy:org.mule.transport.NullPayload.getInstance()]"/>-->
+        <!--</mock:when>-->
 
-        <mock:when messageProcessor="loggly:logger"/>
+        <!--<mock:when messageProcessor="loggly:logger"/>-->
 
-        <flow-ref name="create-consumer-version"/>
+        <!--<flow-ref name="create-consumer-version"/>-->
 
-        <mock:verify-call messageProcessor="morphia:find-single" times="1"/>
-        <mock:verify-call messageProcessor="morphia:save" times="0"/>
-        <munit:assert-on-equals expected-ref='#[string:404]' value-ref="#[message.outboundProperties['http.status']]"/>
-    </munit:test>
+        <!--<mock:verify-call messageProcessor="morphia:find-single" times="1"/>-->
+        <!--<mock:verify-call messageProcessor="morphia:save" times="0"/>-->
+        <!--<munit:assert-on-equals expected-ref='#[string:404]' value-ref="#[message.outboundProperties['http.status']]"/>-->
+    <!--</munit:test>-->
 
 
-    <munit:test name="testFailingSave" description="Test that we handle the duplicate exception">
-        <munit:set payload-ref="#[resultOfScript('mockConsumer')]">
-            <munit:invocation-properties>
-                <munit:invocation-property key="consumerName" value-ref="#[string:consumerName]"/>
-            </munit:invocation-properties>
-            <munit:inbound-properties>
-                <munit:inbound-property key="http.query.params"
-                                        value-ref="#[['organizationName':'dummyOrganization']]"/>
-            </munit:inbound-properties>
-        </munit:set>
+    <!--<munit:test name="testFailingSave" description="Test that we handle the duplicate exception">-->
+        <!--<munit:set payload-ref="#[resultOfScript('mockConsumer')]">-->
+            <!--<munit:invocation-properties>-->
+                <!--<munit:invocation-property key="consumerName" value-ref="#[string:consumerName]"/>-->
+            <!--</munit:invocation-properties>-->
+            <!--<munit:inbound-properties>-->
+                <!--<munit:inbound-property key="http.query.params"-->
+                                        <!--value-ref="#[['organizationName':'dummyOrganization']]"/>-->
+            <!--</munit:inbound-properties>-->
+        <!--</munit:set>-->
 
-        <mock:when messageProcessor="morphia:find-single">
-            <mock:with-attributes>
-                <mock:with-attribute name="className" whereValue-ref="#[string:org.mule.munit.Organization]"/>
-            </mock:with-attributes>
-            <mock:then-return payload-ref="#[resultOfScript('mockOrganization')]"/>
-        </mock:when>
+        <!--<mock:when messageProcessor="morphia:find-single">-->
+            <!--<mock:with-attributes>-->
+                <!--<mock:with-attribute name="className" whereValue-ref="#[string:org.mule.munit.Organization]"/>-->
+            <!--</mock:with-attributes>-->
+            <!--<mock:then-return payload-ref="#[resultOfScript('mockOrganization')]"/>-->
+        <!--</mock:when>-->
 
-        <mock:when messageProcessor="morphia:find-single">
-            <mock:with-attributes>
-                <mock:with-attribute name="className" whereValue-ref="#[string:org.mule.munit.Consumer]"/>
-            </mock:with-attributes>
-            <mock:then-return payload-ref="#[resultOfScript('mockConsumer')]"/>
-        </mock:when>
+        <!--<mock:when messageProcessor="morphia:find-single">-->
+            <!--<mock:with-attributes>-->
+                <!--<mock:with-attribute name="className" whereValue-ref="#[string:org.mule.munit.Consumer]"/>-->
+            <!--</mock:with-attributes>-->
+            <!--<mock:then-return payload-ref="#[resultOfScript('mockConsumer')]"/>-->
+        <!--</mock:when>-->
 
-        <mock:throw-an exception-ref="#[new org.mule.munit.DuplicateKeyException()]" whenCalling="morphia:save"/>
+        <!--<mock:throw-an exception-ref="#[new org.mule.munit.DuplicateKeyException()]" whenCalling="morphia:save"/>-->
 
-        <mock:when messageProcessor="loggly:logger"/>
+        <!--<mock:when messageProcessor="loggly:logger"/>-->
 
-        <flow-ref name="create-consumer-version"/>
+        <!--<flow-ref name="create-consumer-version"/>-->
 
-        <mock:verify-call messageProcessor="morphia:find-single" times="2"/>
-        <mock:verify-call messageProcessor="morphia:save" times="1"/>
+        <!--<mock:verify-call messageProcessor="morphia:find-single" times="2"/>-->
+        <!--<mock:verify-call messageProcessor="morphia:save" times="1"/>-->
 
-        <munit:assert-on-equals expected-ref='#[string:409]' value-ref="#[message.outboundProperties['http.status']]"/>
-    </munit:test>
+        <!--<munit:assert-on-equals expected-ref='#[string:409]' value-ref="#[message.outboundProperties['http.status']]"/>-->
+    <!--</munit:test>-->
 
 
 </mule>
