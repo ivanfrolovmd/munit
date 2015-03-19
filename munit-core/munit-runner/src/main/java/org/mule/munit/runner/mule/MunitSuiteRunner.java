@@ -32,7 +32,6 @@ public class MunitSuiteRunner {
 
 
     public MunitSuiteRunner(String resources) {
-
         this(resources, null);
     }
 
