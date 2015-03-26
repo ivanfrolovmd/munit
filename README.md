@@ -47,5 +47,3 @@ MAVEN_OPTS="-XX:MaxPermSize=128m"
 * [munit-utils] (/munit-utils) Utilities for mule integration testing
 * [munit-examples] (/munit-examples) Usage examples of Munit
 * [tooling] (/tooling) Not included in the build. Eclipse plugin
-
-
