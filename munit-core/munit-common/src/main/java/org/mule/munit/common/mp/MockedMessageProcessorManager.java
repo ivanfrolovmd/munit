@@ -56,7 +56,7 @@ public class MockedMessageProcessorManager extends MessageProcessorManager
      * Reset all the status
      * </p>
      */
-    public void reset()
+    public synchronized void reset()
     {
         behaviors.clear();
         calls.clear();
@@ -73,7 +73,7 @@ public class MockedMessageProcessorManager extends MessageProcessorManager
      * @param attributesMatchers The attributes that the message processor must match
      * @return The List of message processor calls
      */
-    public List<MessageProcessorCall> findCallsFor(MessageProcessorId mpId, Map<String, Object> attributesMatchers)
+    public synchronized List<MessageProcessorCall> findCallsFor(MessageProcessorId mpId, Map<String, Object> attributesMatchers)
     {
         List<MessageProcessorCall> expected = new ArrayList<MessageProcessorCall>();
         MessageProcessorCall matchingCall = new MessageProcessorCall(mpId);
@@ -96,7 +96,7 @@ public class MockedMessageProcessorManager extends MessageProcessorManager
      * @param messageProcessorCall The comparing call
      * @return The best matching Before spy assertion
      */
-    public SpyAssertion getBetterMatchingBeforeSpyAssertion(MessageProcessorCall messageProcessorCall)
+    public synchronized SpyAssertion getBetterMatchingBeforeSpyAssertion(MessageProcessorCall messageProcessorCall)
     {
         return getBetterMatchingAction(messageProcessorCall, beforeCallSpyAssertions);
     }
@@ -110,7 +110,7 @@ public class MockedMessageProcessorManager extends MessageProcessorManager
      * @param messageProcessorCall The comparing call
      * @return The best matching After spy assertion
      */
-    public SpyAssertion getBetterMatchingAfterSpyAssertion(MessageProcessorCall messageProcessorCall)
+    public synchronized SpyAssertion getBetterMatchingAfterSpyAssertion(MessageProcessorCall messageProcessorCall)
     {
         return getBetterMatchingAction(messageProcessorCall, afterCallSpyAssertions);
     }
@@ -130,7 +130,7 @@ public class MockedMessageProcessorManager extends MessageProcessorManager
         afterCallSpyAssertions.add(spyAssertion);
     }
 
-    public List<MunitMessageProcessorCall> getCalls()
+    public synchronized List<MunitMessageProcessorCall> getCalls()
     {
         return new LinkedList<MunitMessageProcessorCall>(calls);
     }
